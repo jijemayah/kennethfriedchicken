@@ -1,4 +1,4 @@
-package com.kfc.pos.dao;
+package com.kfc.pos.table;
 
 import com.kfc.pos.model.InventoryItem;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class InventoryDao {
+public class InventoryTable {
 
     private static final String SELECT =
             "SELECT i.product_id, p.name AS product_name, c.name AS category_name, i.quantity, "

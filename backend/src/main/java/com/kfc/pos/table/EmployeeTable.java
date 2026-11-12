@@ -1,4 +1,4 @@
-package com.kfc.pos.dao;
+package com.kfc.pos.table;
 
 import com.kfc.pos.model.Employee;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class EmployeeDao implements CrudDao<Employee> {
+public class EmployeeTable implements CrudTable<Employee> {
 
     private static final String SELECT =
             "SELECT employee_id, first_name, last_name, username, password_hash, role, is_active FROM employee ";

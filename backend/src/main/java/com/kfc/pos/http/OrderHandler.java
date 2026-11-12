@@ -1,6 +1,6 @@
 package com.kfc.pos.http;
 
-import com.kfc.pos.dao.OrderDao;
+import com.kfc.pos.table.OrderTable;
 import com.kfc.pos.service.AuthService;
 import com.kfc.pos.service.CheckoutService;
 import com.kfc.pos.service.CheckoutService.CartLine;
@@ -19,12 +19,12 @@ import java.util.List;
  */
 public class OrderHandler extends BaseHandler {
 
-    private final OrderDao orderDao;
+    private final OrderTable orderTable;
     private final CheckoutService checkoutService;
 
-    public OrderHandler(AuthService auth, OrderDao orderDao, CheckoutService checkoutService) {
+    public OrderHandler(AuthService auth, OrderTable orderTable, CheckoutService checkoutService) {
         super(auth);
-        this.orderDao = orderDao;
+        this.orderTable = orderTable;
         this.checkoutService = checkoutService;
     }
 
@@ -37,7 +37,7 @@ public class OrderHandler extends BaseHandler {
             if (method != null && !method.matches("CASH|GCASH|CARD")) {
                 throw new ApiException(400, "Unknown payment method");
             }
-            List<OrderDao.OrderSummary> orders = orderDao.search(date(req.query("from")),
+            List<OrderTable.OrderSummary> orders = orderTable.search(date(req.query("from")),
                     date(req.query("to")), method, req.query("q"));
             return JsonMapper.list(orders, s -> JsonMapper.order(s.order(), s.itemCount()));
         }
@@ -57,11 +57,11 @@ public class OrderHandler extends BaseHandler {
 
             int orderId = checkoutService.checkout(user, body.getInt("customerId"), cart, payment);
             req.setStatus(201);
-            return JsonMapper.order(orderDao.findById(orderId).orElseThrow(), null);
+            return JsonMapper.order(orderTable.findById(orderId).orElseThrow(), null);
         }
 
         if (req.segmentCount() == 1 && req.method().equals("GET")) {
-            return JsonMapper.order(orderDao.findById(req.idAt(0)).orElseThrow(() -> notFound("Order")), null);
+            return JsonMapper.order(orderTable.findById(req.idAt(0)).orElseThrow(() -> notFound("Order")), null);
         }
         throw methodNotAllowed();
     }

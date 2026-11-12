@@ -1,6 +1,6 @@
 package com.kfc.pos.http;
 
-import com.kfc.pos.dao.EmployeeDao;
+import com.kfc.pos.table.EmployeeTable;
 import com.kfc.pos.model.Employee;
 import com.kfc.pos.model.Validator;
 import com.kfc.pos.service.AuthService;
@@ -12,11 +12,11 @@ import com.kfc.pos.service.PasswordHasher;
  */
 public class EmployeeHandler extends BaseHandler {
 
-    private final EmployeeDao dao;
+    private final EmployeeTable table;
 
-    public EmployeeHandler(AuthService auth, EmployeeDao dao) {
+    public EmployeeHandler(AuthService auth, EmployeeTable table) {
         super(auth);
-        this.dao = dao;
+        this.table = table;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class EmployeeHandler extends BaseHandler {
         if (req.segmentCount() == 0) {
             switch (req.method()) {
                 case "GET":
-                    return JsonMapper.list(dao.findAll(), JsonMapper::employee);
+                    return JsonMapper.list(table.findAll(), JsonMapper::employee);
                 case "POST": {
                     JsonBody body = req.body();
                     String password = body.getString("password");
@@ -37,7 +37,7 @@ public class EmployeeHandler extends BaseHandler {
                             body.getString("lastName"), body.getString("username"),
                             PasswordHasher.hash(password), true);
                     req.setStatus(201);
-                    return JsonMapper.employee(dao.create(created));
+                    return JsonMapper.employee(table.create(created));
                 }
                 default:
                     throw methodNotAllowed();
@@ -45,7 +45,7 @@ public class EmployeeHandler extends BaseHandler {
         }
 
         int id = req.idAt(0);
-        Employee existing = dao.findById(id).orElseThrow(() -> notFound("Employee"));
+        Employee existing = table.findById(id).orElseThrow(() -> notFound("Employee"));
         switch (req.method()) {
             case "PUT": {
                 JsonBody body = req.body();
@@ -63,14 +63,14 @@ public class EmployeeHandler extends BaseHandler {
                 // A role change means a different subclass, so build a fresh object.
                 Employee updated = Employee.create(role, id, body.getString("firstName"),
                         body.getString("lastName"), body.getString("username"), hash, active);
-                dao.update(updated);
+                table.update(updated);
                 return JsonMapper.employee(updated);
             }
             case "DELETE":
                 if (id == user.getId()) {
                     throw new ApiException(400, "You cannot deactivate your own account");
                 }
-                dao.delete(id);
+                table.delete(id);
                 return null;
             default:
                 throw methodNotAllowed();

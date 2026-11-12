@@ -1,6 +1,6 @@
 package com.kfc.pos.http;
 
-import com.kfc.pos.dao.InventoryDao;
+import com.kfc.pos.table.InventoryTable;
 import com.kfc.pos.model.Employee;
 import com.kfc.pos.model.InventoryItem;
 import com.kfc.pos.service.AuthService;
@@ -12,11 +12,11 @@ import com.kfc.pos.service.AuthService;
  */
 public class InventoryHandler extends BaseHandler {
 
-    private final InventoryDao dao;
+    private final InventoryTable table;
 
-    public InventoryHandler(AuthService auth, InventoryDao dao) {
+    public InventoryHandler(AuthService auth, InventoryTable table) {
         super(auth);
-        this.dao = dao;
+        this.table = table;
     }
 
     @Override
@@ -24,12 +24,12 @@ public class InventoryHandler extends BaseHandler {
         Employee user = requireLogin(req);
 
         if (req.segmentCount() == 0 && req.method().equals("GET")) {
-            return JsonMapper.list(dao.findAll(), JsonMapper::inventory);
+            return JsonMapper.list(table.findAll(), JsonMapper::inventory);
         }
 
         requirePermission(user.canManageInventory());
         int productId = req.idAt(0);
-        InventoryItem item = dao.findByProductId(productId).orElseThrow(() -> notFound("Inventory item"));
+        InventoryItem item = table.findByProductId(productId).orElseThrow(() -> notFound("Inventory item"));
         JsonBody body = req.body();
 
         if ("adjust".equals(req.segment(1)) && req.method().equals("POST")) {
@@ -60,7 +60,7 @@ public class InventoryHandler extends BaseHandler {
             throw methodNotAllowed();
         }
 
-        dao.save(item);
-        return JsonMapper.inventory(dao.findByProductId(productId).orElseThrow());
+        table.save(item);
+        return JsonMapper.inventory(table.findByProductId(productId).orElseThrow());
     }
 }

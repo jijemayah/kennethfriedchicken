@@ -26,7 +26,7 @@ database/   schema.sql (tables + constraints), seed.sql (sample data)
 backend/    Java API  — src/main/java/com/kfc/pos/
   model/      Employee, Cashier, Manager, Product, Category, InventoryItem, Order, OrderItem, Customer, Validator
   payment/    Payment (abstract), CashPayment, GCashPayment, CardPayment, PaymentRecord
-  dao/        CrudDao<T> + JDBC classes (all SQL lives here)
+  table/      one class per database table (ProductTable, OrderTable, …) + CrudTable<T>; all SQL lives here
   service/    CheckoutService (transaction), AuthService, PasswordHasher
   http/       HTTP handlers + tiny JSON helper (no OOP rules here, just requests/responses)
 frontend/   React app — src/pages (Login, Dashboard, POS, Products, Inventory, Orders, Employees)
@@ -40,7 +40,7 @@ frontend/   React app — src/pages (Login, Dashboard, POS, Products, Inventory,
 | **Inheritance** | `Employee` → `Cashier`, `Manager` | Shared fields (name, username, password hash) are written once in `Employee`. Subclasses only define their role and permissions. |
 | **Polymorphism** | `Payment` → `CashPayment`, `GCashPayment`, `CardPayment`; also `Employee.canManageProducts()` | `CheckoutService` holds a `Payment` variable and calls `payment.process()`. Java runs the cash, GCash, or card version at runtime. Permission checks call `user.canManageInventory()` without checking which subclass it is. |
 | **Abstraction** | `abstract class Payment` | It declares `validate()`, `buildReference()`, `getDetails()` without code. Checkout uses the payment without knowing how each method is validated. |
-| Generics | `CrudDao<T>`, `JsonMapper.list()` | One CRUD interface reused for `Category`, `Product`, `Employee`, `Customer`. |
+| Generics | `CrudTable<T>`, `JsonMapper.list()` | One CRUD interface reused for `Category`, `Product`, `Employee`, `Customer`. |
 | Regex | `Validator`, `GCashPayment`, `CardPayment` | Username, PH mobile number (`^09\d{9}$`), 16-digit card, card brand, masking `0917****567`. |
 
 Checkout (`CheckoutService.checkout`) runs in **one database transaction**: lock stock → build order with database prices → process payment → insert order, items, payment → reduce stock → `commit()`. Any error → `rollback()`.

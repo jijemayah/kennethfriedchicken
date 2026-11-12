@@ -1,4 +1,4 @@
-package com.kfc.pos.dao;
+package com.kfc.pos.table;
 
 import com.kfc.pos.model.Customer;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomerDao implements CrudDao<Customer> {
+public class CustomerTable implements CrudTable<Customer> {
 
     private static final String SELECT = "SELECT customer_id, full_name, phone, email FROM customer ";
 

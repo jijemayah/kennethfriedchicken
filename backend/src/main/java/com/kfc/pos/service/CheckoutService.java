@@ -1,8 +1,8 @@
 package com.kfc.pos.service;
 
-import com.kfc.pos.dao.Database;
-import com.kfc.pos.dao.InventoryDao;
-import com.kfc.pos.dao.OrderDao;
+import com.kfc.pos.table.Database;
+import com.kfc.pos.table.InventoryTable;
+import com.kfc.pos.table.OrderTable;
 import com.kfc.pos.model.Employee;
 import com.kfc.pos.model.InventoryItem;
 import com.kfc.pos.model.Order;
@@ -36,12 +36,12 @@ public class CheckoutService {
     public record PaymentInput(String method, BigDecimal amountTendered, String mobileNumber,
                                String cardNumber, String cardHolder) { }
 
-    private final OrderDao orderDao;
-    private final InventoryDao inventoryDao;
+    private final OrderTable orderTable;
+    private final InventoryTable inventoryTable;
 
-    public CheckoutService(OrderDao orderDao, InventoryDao inventoryDao) {
-        this.orderDao = orderDao;
-        this.inventoryDao = inventoryDao;
+    public CheckoutService(OrderTable orderTable, InventoryTable inventoryTable) {
+        this.orderTable = orderTable;
+        this.inventoryTable = inventoryTable;
     }
 
     public int checkout(Employee cashier, Integer customerId, List<CartLine> cart, PaymentInput input)
@@ -73,13 +73,13 @@ public class CheckoutService {
                 payment.process();
 
                 // Step 4: save everything and reduce stock.
-                int orderId = orderDao.insert(conn, order, payment);
+                int orderId = orderTable.insert(conn, order, payment);
                 for (OrderItem item : order.getItems()) {
-                    InventoryItem stock = inventoryDao.findByProductId(conn, item.getProductId(), true)
+                    InventoryItem stock = inventoryTable.findByProductId(conn, item.getProductId(), true)
                             .orElseThrow(() -> new IllegalArgumentException(
                                     item.getProductName() + " has no inventory record"));
                     stock.removeStock(item.getQuantity());   // throws if not enough stock
-                    inventoryDao.save(conn, stock);
+                    inventoryTable.save(conn, stock);
                 }
 
                 conn.commit();

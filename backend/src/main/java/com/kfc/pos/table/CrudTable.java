@@ -1,4 +1,4 @@
-package com.kfc.pos.dao;
+package com.kfc.pos.table;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -7,10 +7,10 @@ import java.util.Optional;
 /**
  * GENERICS: one interface describes Create/Read/Update/Delete for any type T.
  *
- * CategoryDao implements CrudDao<Category>, ProductDao implements CrudDao<Product>,
+ * CategoryTable implements CrudTable<Category>, ProductTable implements CrudTable<Product>,
  * and so on — the method names stay the same, only the type changes.
  */
-public interface CrudDao<T> {
+public interface CrudTable<T> {
 
     List<T> findAll() throws SQLException;
 

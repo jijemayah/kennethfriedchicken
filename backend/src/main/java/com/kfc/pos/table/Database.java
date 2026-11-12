@@ -1,4 +1,4 @@
-package com.kfc.pos.dao;
+package com.kfc.pos.table;
 
 import java.io.IOException;
 import java.nio.file.Files;

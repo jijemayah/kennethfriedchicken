@@ -1,6 +1,6 @@
 package com.kfc.pos.service;
 
-import com.kfc.pos.dao.EmployeeDao;
+import com.kfc.pos.table.EmployeeTable;
 import com.kfc.pos.model.Employee;
 
 import java.security.SecureRandom;
@@ -22,12 +22,12 @@ public class AuthService {
 
     private record Session(int employeeId, Instant expiresAt) { }
 
-    private final EmployeeDao employeeDao;
+    private final EmployeeTable employeeTable;
     private final Map<String, Session> sessions = new ConcurrentHashMap<>();
     private final SecureRandom random = new SecureRandom();
 
-    public AuthService(EmployeeDao employeeDao) {
-        this.employeeDao = employeeDao;
+    public AuthService(EmployeeTable employeeTable) {
+        this.employeeTable = employeeTable;
     }
 
     /** Returns a new token, or empty if the username/password is wrong. */
@@ -35,7 +35,7 @@ public class AuthService {
         if (username == null || password == null) {
             return Optional.empty();
         }
-        Optional<Employee> found = employeeDao.findByUsername(username);
+        Optional<Employee> found = employeeTable.findByUsername(username);
         if (found.isEmpty() || !found.get().isActive()
                 || !PasswordHasher.matches(password, found.get().getPasswordHash())) {
             return Optional.empty();
@@ -60,7 +60,7 @@ public class AuthService {
             sessions.remove(token);
             return Optional.empty();
         }
-        return employeeDao.findById(session.employeeId()).filter(Employee::isActive);
+        return employeeTable.findById(session.employeeId()).filter(Employee::isActive);
     }
 
     public void logout(String token) {

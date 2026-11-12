@@ -1,4 +1,4 @@
-package com.kfc.pos.dao;
+package com.kfc.pos.table;
 
 import com.kfc.pos.model.Order;
 import com.kfc.pos.model.OrderItem;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class OrderDao {
+public class OrderTable {
 
     private static final String SELECT =
             "SELECT o.order_id, o.employee_id, e.first_name || ' ' || e.last_name AS employee_name, "

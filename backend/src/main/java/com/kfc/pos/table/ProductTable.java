@@ -1,4 +1,4 @@
-package com.kfc.pos.dao;
+package com.kfc.pos.table;
 
 import com.kfc.pos.model.Product;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ProductDao implements CrudDao<Product> {
+public class ProductTable implements CrudTable<Product> {
 
     private static final String SELECT =
             "SELECT p.product_id, p.category_id, c.name AS category_name, p.name, p.description, "

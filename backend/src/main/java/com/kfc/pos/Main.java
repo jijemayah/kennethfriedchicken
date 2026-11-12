@@ -1,13 +1,13 @@
 package com.kfc.pos;
 
-import com.kfc.pos.dao.CategoryDao;
-import com.kfc.pos.dao.CustomerDao;
-import com.kfc.pos.dao.DashboardDao;
-import com.kfc.pos.dao.Database;
-import com.kfc.pos.dao.EmployeeDao;
-import com.kfc.pos.dao.InventoryDao;
-import com.kfc.pos.dao.OrderDao;
-import com.kfc.pos.dao.ProductDao;
+import com.kfc.pos.table.CategoryTable;
+import com.kfc.pos.table.CustomerTable;
+import com.kfc.pos.table.DashboardTable;
+import com.kfc.pos.table.Database;
+import com.kfc.pos.table.EmployeeTable;
+import com.kfc.pos.table.InventoryTable;
+import com.kfc.pos.table.OrderTable;
+import com.kfc.pos.table.ProductTable;
 import com.kfc.pos.http.AuthHandler;
 import com.kfc.pos.http.CategoryHandler;
 import com.kfc.pos.http.EmployeeHandler;
@@ -24,31 +24,31 @@ import java.util.concurrent.Executors;
 
 /**
  * Starts the REST API using Java's built-in HTTP server (no framework).
- * Wiring is done by hand here: create the DAOs, the services, then the handlers.
+ * Wiring is done by hand here: create the Table classes, the services, then the handlers.
  */
 public class Main {
 
     public static void main(String[] args) throws Exception {
         int port = Integer.parseInt(Database.env("PORT", "8080"));
 
-        EmployeeDao employeeDao = new EmployeeDao();
-        ProductDao productDao = new ProductDao();
-        InventoryDao inventoryDao = new InventoryDao();
-        OrderDao orderDao = new OrderDao();
+        EmployeeTable employeeTable = new EmployeeTable();
+        ProductTable productTable = new ProductTable();
+        InventoryTable inventoryTable = new InventoryTable();
+        OrderTable orderTable = new OrderTable();
 
-        AuthService auth = new AuthService(employeeDao);
-        CheckoutService checkout = new CheckoutService(orderDao, inventoryDao);
+        AuthService auth = new AuthService(employeeTable);
+        CheckoutService checkout = new CheckoutService(orderTable, inventoryTable);
 
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/api/health", new SimpleHandlers.Health(auth));
         server.createContext("/api/auth", new AuthHandler(auth));
-        server.createContext("/api/dashboard", new SimpleHandlers.Dashboard(auth, new DashboardDao()));
-        server.createContext("/api/categories", new CategoryHandler(auth, new CategoryDao()));
-        server.createContext("/api/products", new ProductHandler(auth, productDao));
-        server.createContext("/api/inventory", new InventoryHandler(auth, inventoryDao));
-        server.createContext("/api/orders", new OrderHandler(auth, orderDao, checkout));
-        server.createContext("/api/employees", new EmployeeHandler(auth, employeeDao));
-        server.createContext("/api/customers", new SimpleHandlers.Customers(auth, new CustomerDao()));
+        server.createContext("/api/dashboard", new SimpleHandlers.Dashboard(auth, new DashboardTable()));
+        server.createContext("/api/categories", new CategoryHandler(auth, new CategoryTable()));
+        server.createContext("/api/products", new ProductHandler(auth, productTable));
+        server.createContext("/api/inventory", new InventoryHandler(auth, inventoryTable));
+        server.createContext("/api/orders", new OrderHandler(auth, orderTable, checkout));
+        server.createContext("/api/employees", new EmployeeHandler(auth, employeeTable));
+        server.createContext("/api/customers", new SimpleHandlers.Customers(auth, new CustomerTable()));
 
         // Java 21 virtual threads: each request gets its own lightweight thread.
         server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());

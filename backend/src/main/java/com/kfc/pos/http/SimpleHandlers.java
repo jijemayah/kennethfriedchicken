@@ -1,7 +1,7 @@
 package com.kfc.pos.http;
 
-import com.kfc.pos.dao.CustomerDao;
-import com.kfc.pos.dao.DashboardDao;
+import com.kfc.pos.table.CustomerTable;
+import com.kfc.pos.table.DashboardTable;
 import com.kfc.pos.model.Customer;
 import com.kfc.pos.service.AuthService;
 
@@ -14,38 +14,38 @@ public final class SimpleHandlers {
 
     /** GET /api/dashboard */
     public static class Dashboard extends BaseHandler {
-        private final DashboardDao dao;
+        private final DashboardTable table;
 
-        public Dashboard(AuthService auth, DashboardDao dao) {
+        public Dashboard(AuthService auth, DashboardTable table) {
             super(auth);
-            this.dao = dao;
+            this.table = table;
         }
 
         @Override
         protected Object handle(Request req) throws Exception {
             requireLogin(req);
-            return dao.summary();
+            return table.summary();
         }
     }
 
     /** GET /api/customers, POST /api/customers */
     public static class Customers extends BaseHandler {
-        private final CustomerDao dao;
+        private final CustomerTable table;
 
-        public Customers(AuthService auth, CustomerDao dao) {
+        public Customers(AuthService auth, CustomerTable table) {
             super(auth);
-            this.dao = dao;
+            this.table = table;
         }
 
         @Override
         protected Object handle(Request req) throws Exception {
             requireLogin(req);
             if (req.method().equals("GET")) {
-                return JsonMapper.list(dao.findAll(), JsonMapper::customer);
+                return JsonMapper.list(table.findAll(), JsonMapper::customer);
             }
             if (req.method().equals("POST")) {
                 JsonBody body = req.body();
-                Customer created = dao.create(new Customer(0, body.getString("fullName"),
+                Customer created = table.create(new Customer(0, body.getString("fullName"),
                         body.getString("phone"), body.getString("email")));
                 req.setStatus(201);
                 return JsonMapper.customer(created);

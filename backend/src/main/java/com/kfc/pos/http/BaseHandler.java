@@ -1,6 +1,6 @@
 package com.kfc.pos.http;
 
-import com.kfc.pos.dao.Database;
+import com.kfc.pos.table.Database;
 import com.kfc.pos.model.Employee;
 import com.kfc.pos.service.AuthService;
 import com.sun.net.httpserver.HttpExchange;

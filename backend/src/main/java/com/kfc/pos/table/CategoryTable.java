@@ -1,4 +1,4 @@
-package com.kfc.pos.dao;
+package com.kfc.pos.table;
 
 import com.kfc.pos.model.Category;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CategoryDao implements CrudDao<Category> {
+public class CategoryTable implements CrudTable<Category> {
 
     private static final String SELECT =
             "SELECT c.category_id, c.name, c.description, COUNT(p.product_id) AS product_count "

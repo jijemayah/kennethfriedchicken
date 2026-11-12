@@ -1,4 +1,4 @@
-package com.kfc.pos.dao;
+package com.kfc.pos.table;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +13,7 @@ import java.util.Map;
  * Read-only report queries for the dashboard. These return plain maps because
  * they are summaries (sums and counts), not business objects.
  */
-public class DashboardDao {
+public class DashboardTable {
 
     private static final String TODAY = "(now() AT TIME ZONE 'Asia/Manila')::date";
     private static final String ORDER_DAY = "(o.created_at AT TIME ZONE 'Asia/Manila')::date";
