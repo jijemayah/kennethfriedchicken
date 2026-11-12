@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Search, PackagePlus, PackageMinus, AlertTriangle, Boxes, SlidersHorizontal } from 'lucide-react';
+import { Search, PackagePlus, PackageMinus, ClipboardCheck, AlertTriangle, Boxes, SlidersHorizontal } from 'lucide-react';
 import { api } from '../api';
 import { useToast } from '../components/Toast';
 import { Modal, PageHeader, TableSkeleton, EmptyState, ErrorBox, Field, Spinner } from '../components/ui';
@@ -80,7 +80,7 @@ export default function Inventory({ user }) {
                       <td className="td text-xs text-muted">{dateTime(item.updatedAt)}</td>
                       {canEdit && (
                         <td className="td text-right">
-                          <button className="btn-secondary px-3 py-1.5 text-xs" onClick={() => setAdjusting(item)}>Adjust</button>
+                          <button className="btn-secondary px-3 py-1.5 text-xs" onClick={() => setAdjusting(item)}>Edit stock</button>
                         </td>
                       )}
                     </tr>
@@ -130,14 +130,11 @@ function AdjustModal({ item, onClose, onSaved }) {
     setBusy(true);
     setError('');
     try {
-      let updated = item;
-      const n = Number(amount || 0);
-      if (n > 0) {
-        updated = await api(`/inventory/${item.productId}/adjust`, { method: 'POST', body: { change: mode === 'add' ? n : -n } });
-      }
-      if (Number(reorder) !== item.reorderLevel) {
-        updated = await api(`/inventory/${item.productId}`, { method: 'PUT', body: { reorderLevel: Number(reorder) } });
-      }
+      // One request: the backend applies the difference with addStock/removeStock.
+      const updated = await api(`/inventory/${item.productId}`, {
+        method: 'PUT',
+        body: { quantity: preview, reorderLevel: Number(reorder) },
+      });
       onSaved(updated);
     } catch (err) {
       setError(err.message);
@@ -146,32 +143,33 @@ function AdjustModal({ item, onClose, onSaved }) {
     }
   };
 
-  const preview = item ? item.quantity + (mode === 'add' ? 1 : -1) * Number(amount || 0) : 0;
+  const n = Number(amount || 0);
+  const preview = !item ? 0 : mode === 'set' ? (amount === '' ? item.quantity : n) : item.quantity + (mode === 'add' ? n : -n);
 
   return (
     <Modal
       open={Boolean(item)}
       onClose={onClose}
-      title={`Adjust stock — ${item?.productName || ''}`}
+      title={`Edit stock — ${item?.productName || ''}`}
       size="sm"
       footer={
         <>
           <button className="btn-secondary" onClick={onClose}>Cancel</button>
-          <button className="btn-primary" form="adjust-form" disabled={busy || preview < 0}>{busy && <Spinner />} Save</button>
+          <button className="btn-primary" form="adjust-form" disabled={busy || preview < 0 || !Number.isInteger(preview)}>{busy && <Spinner />} Save</button>
         </>
       }
     >
       <form id="adjust-form" onSubmit={submit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-2">
-          {[['add', 'Stock in', PackagePlus], ['remove', 'Stock out', PackageMinus]].map(([key, label, Icon]) => (
-            <button type="button" key={key} onClick={() => setMode(key)}
+        <div className="grid grid-cols-3 gap-2">
+          {[['add', 'Stock in', PackagePlus], ['remove', 'Stock out', PackageMinus], ['set', 'Set count', ClipboardCheck]].map(([key, label, Icon]) => (
+            <button type="button" key={key} onClick={() => { setMode(key); setAmount(''); }}
               className={`flex items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition-all cursor-pointer active:scale-95
                 ${mode === key ? 'border-primary bg-primary/5 text-primary' : 'border-line text-muted hover:text-ink'}`}>
               <Icon size={16} /> {label}
             </button>
           ))}
         </div>
-        <Field label={mode === 'add' ? 'Units received' : 'Units to remove (spoilage, count correction)'}>
+        <Field label={{ add: 'Units received', remove: 'Units to remove (spoilage, waste)', set: 'Exact count on hand' }[mode]}>
           <input className="input" type="number" min="0" value={amount} onChange={(e) => setAmount(e.target.value)} autoFocus />
         </Field>
         <div className="flex justify-between rounded-xl bg-page px-4 py-3 text-sm">

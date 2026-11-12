@@ -8,9 +8,7 @@ export function Receipt({ order }) {
   return (
     <div className="print-area mx-auto w-full max-w-xs rounded-xl border border-dashed border-gray-300 bg-white p-5 font-mono text-[12.5px] leading-relaxed text-ink">
       <div className="text-center">
-        <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-primary font-sans text-xs font-extrabold text-white">
-          KFC
-        </div>
+        <img src="/logo.png" alt="" className="mx-auto mb-2 h-12 w-12 rounded-full border-2 border-primary object-cover object-top" />
         <p className="font-sans text-sm font-bold">KENNETH FRIED CHICKEN</p>
         <p className="text-muted">Official Receipt (Demo)</p>
       </div>

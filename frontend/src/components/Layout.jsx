@@ -1,12 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, LogOut, Menu, X } from 'lucide-react';
 
+/** The brand photo in a round frame with a red gradient ring. */
+export function LogoMark({ size = 40, className = '' }) {
+  return (
+    <span
+      className={`inline-flex shrink-0 rounded-full bg-linear-to-br from-primary to-primary-dark p-[2px] shadow-md shadow-primary/30 ${className}`}
+      style={{ width: size, height: size }}
+    >
+      <img src="/logo.png" alt="Kenneth Fried Chicken logo" className="h-full w-full rounded-full border-2 border-white bg-white object-cover object-top" />
+    </span>
+  );
+}
+
 export function Logo({ compact }) {
   return (
     <div className="flex items-center gap-2.5">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary font-display text-sm font-extrabold text-white shadow-md shadow-primary/30">
-        KFC
-      </div>
+      <LogoMark size={44} />
       {!compact && (
         <div className="leading-tight">
           <p className="font-display text-[15px] font-bold">Kenneth Fried</p>
@@ -39,7 +49,7 @@ export function Layout({ pages, current, onNavigate, user, onLogout, children })
                 onClick={() => navigate(key)}
                 className={`group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium
                   transition-all duration-200 cursor-pointer
-                  ${active ? 'bg-primary text-white shadow-md shadow-primary/25' : 'text-muted hover:bg-page hover:text-ink'}`}
+                  ${active ? 'bg-linear-to-r from-primary to-primary-dark text-white shadow-md shadow-primary/25' : 'text-muted hover:bg-page hover:text-ink'}`}
               >
                 <Icon size={18} className={`transition-transform duration-200 ${active ? '' : 'group-hover:scale-110'}`} />
                 {label}
@@ -59,7 +69,7 @@ export function Layout({ pages, current, onNavigate, user, onLogout, children })
   return (
     <div className="min-h-screen lg:pl-64">
       {/* desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-line bg-white lg:block">{sidebar}</aside>
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-line bg-linear-to-b from-white via-white to-primary/[0.05] lg:block">{sidebar}</aside>
 
       {/* mobile drawer */}
       <div className={`fixed inset-0 z-40 lg:hidden ${mobileOpen ? '' : 'pointer-events-none'}`}>

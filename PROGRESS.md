@@ -8,6 +8,8 @@ _Last updated: 2026-11-13_
 - **Frontend (React/Vite/Tailwind/Lucide):** Login, Dashboard, POS (search, categories, cart, quantities, VAT, Cash/GCash/Card payment modal), Products + Categories CRUD, Inventory (stock in/out, reorder level), Order History (filters, receipt), Employees (add/edit/deactivate), printable receipts. Animations: button feedback, card hover lift, page transitions, modal scale/fade in/out, dropdown, toasts, skeletons, cart add/remove, dashboard entrance and chart growth.
 - **Tested:** backend compiles (`javac --release 21`); OOP smoke test passed (totals, VAT, change, GCash/card regex + Luhn rejection, stock overdraw rejection, role permissions, JSON round-trip); API boots, health/CORS/401 behave correctly; frontend production build passes; login page renders.
 
+- **Update 2:** stock can be edited from the Products form ("Stock on hand") and from Inventory → Edit stock (Stock in / Stock out / Set count). `PUT /api/inventory/{id}` accepts an exact `quantity`; the difference still goes through `InventoryItem.addStock/removeStock`. Brand photo used as logo (sidebar, login, receipt, favicon). Gradient backgrounds, buttons, nav, and charts.
+
 ## Known issues / not yet verified
 - **Not yet tested against a real Supabase database** (no credentials configured). CRUD, checkout, and dashboard queries need an end-to-end run.
 - Maven is not installed on this machine; the backend was compiled with `javac`. `mvn package` runs inside the Dockerfile on Render.

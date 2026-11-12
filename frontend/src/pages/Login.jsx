@@ -24,17 +24,21 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
+    <div className="grid min-h-screen bg-linear-to-br from-white via-page to-primary/[0.06] lg:grid-cols-2">
       {/* brand panel */}
-      <div className="relative hidden overflow-hidden bg-primary lg:flex lg:flex-col lg:justify-between lg:p-12 text-white">
-        <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-white/10" />
-        <div className="absolute -bottom-32 -left-16 h-[28rem] w-[28rem] rounded-full bg-primary-dark/60" />
+      <div className="relative hidden overflow-hidden bg-linear-to-br from-[#E8262D] via-primary to-primary-dark lg:flex lg:flex-col lg:justify-between lg:p-12 text-white">
+        <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-linear-to-br from-white/20 to-white/0" />
+        <div className="absolute -bottom-32 -left-16 h-[28rem] w-[28rem] rounded-full bg-linear-to-tr from-black/25 to-transparent" />
         <div className="relative flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white font-display font-extrabold text-primary">KFC</div>
           <span className="font-display text-xl font-bold">Kenneth Fried Chicken</span>
         </div>
         <div className="relative animate-rise">
-          <Drumstick size={56} className="mb-6 opacity-90" />
+          <div className="mb-8 flex items-center gap-4">
+            <span className="inline-flex rounded-full bg-white/25 p-1.5 shadow-2xl shadow-black/30 backdrop-blur">
+              <img src="/logo.png" alt="Kenneth Fried Chicken logo" className="h-28 w-28 rounded-full border-4 border-white bg-white object-cover object-top" />
+            </span>
+            <Drumstick size={40} className="opacity-80" />
+          </div>
           <h1 className="font-display text-5xl font-extrabold leading-tight">
             Crispy orders,
             <br />

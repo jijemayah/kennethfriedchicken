@@ -58,7 +58,7 @@ export default function Dashboard({ user }) {
                       {money(d.sales)}
                     </span>
                     <div
-                      className={`w-full max-w-12 rounded-t-lg animate-grow-up transition-colors ${isToday ? 'bg-primary' : 'bg-primary/25 group-hover:bg-primary/50'}`}
+                      className={`w-full max-w-12 rounded-t-lg animate-grow-up transition-colors ${isToday ? 'bg-linear-to-t from-primary-dark to-[#F04A50]' : 'bg-linear-to-t from-primary/30 to-primary/10 group-hover:from-primary/60 group-hover:to-primary/30'}`}
                       style={{ height: `${Math.max(pct, 2)}%`, animationDelay: `${i * 60}ms` }}
                       title={`${d.orders} orders`}
                     />
@@ -84,7 +84,7 @@ export default function Dashboard({ user }) {
                     <span className="text-muted">{m.count} · <span className="font-semibold text-ink">{money(m.amount)}</span></span>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-page">
-                    <div className="h-full rounded-full bg-primary animate-grow-right" style={{ width: `${(Number(m.amount) / totalPaid) * 100}%`, animationDelay: `${i * 80}ms` }} />
+                    <div className="h-full rounded-full bg-linear-to-r from-primary-dark to-[#F04A50] animate-grow-right" style={{ width: `${(Number(m.amount) / totalPaid) * 100}%`, animationDelay: `${i * 80}ms` }} />
                   </div>
                 </div>
               ))}

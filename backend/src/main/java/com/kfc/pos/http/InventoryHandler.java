@@ -8,7 +8,7 @@ import com.kfc.pos.service.AuthService;
 /**
  * GET  /api/inventory
  * POST /api/inventory/{productId}/adjust   { "change": 24 }  or  { "change": -3 }
- * PUT  /api/inventory/{productId}          { "reorderLevel": 15 }
+ * PUT  /api/inventory/{productId}          { "quantity": 50, "reorderLevel": 15 }  (both optional)
  */
 public class InventoryHandler extends BaseHandler {
 
@@ -41,6 +41,20 @@ public class InventoryHandler extends BaseHandler {
                 item.removeStock(-change);
             }
         } else if (req.segmentCount() == 1 && req.method().equals("PUT")) {
+            // Set an exact count (e.g. after a physical stock count).
+            // The difference still goes through addStock/removeStock so the rules stay in one place.
+            Integer quantity = body.getInt("quantity");
+            if (quantity != null) {
+                if (quantity < 0) {
+                    throw new ApiException(400, "Quantity cannot be negative");
+                }
+                int difference = quantity - item.getQuantity();
+                if (difference > 0) {
+                    item.addStock(difference);
+                } else if (difference < 0) {
+                    item.removeStock(-difference);
+                }
+            }
             item.setReorderLevel(body.getInt("reorderLevel", item.getReorderLevel()));
         } else {
             throw methodNotAllowed();

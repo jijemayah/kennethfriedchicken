@@ -13,7 +13,13 @@
 }
 
 body {
-  background: var(--color-page);
+  /* soft red glows on a light gray base */
+  background:
+    radial-gradient(1100px 600px at 105% -10%, rgba(215, 25, 32, 0.08), transparent 60%),
+    radial-gradient(900px 520px at -10% 110%, rgba(163, 15, 22, 0.06), transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, var(--color-page) 45%);
+  background-attachment: fixed;
+  min-height: 100vh;
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
 }
@@ -25,7 +31,8 @@ body {
     active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none;
 }
 @utility btn-primary {
-  @apply btn bg-primary text-white shadow-sm shadow-primary/30 hover:bg-primary-dark hover:shadow-md hover:shadow-primary/30;
+  @apply btn bg-linear-to-br from-[#E8262D] to-primary-dark text-white shadow-sm shadow-primary/30
+    hover:brightness-110 hover:shadow-md hover:shadow-primary/35;
 }
 @utility btn-secondary {
   @apply btn bg-white text-ink border border-line hover:bg-page hover:border-gray-300;

@@ -57,6 +57,9 @@ function ProductList({ categories }) {
     const body = { ...form, categoryId: Number(form.categoryId), stock: Number(form.stock || 0) };
     if (form.id) {
       await api(`/products/${form.id}`, { method: 'PUT', body });
+      if (body.stock !== editing.stock) {
+        await api(`/inventory/${form.id}`, { method: 'PUT', body: { quantity: body.stock } });
+      }
       toast.success('Product updated');
     } else {
       await api('/products', { method: 'POST', body });
@@ -209,7 +212,9 @@ function ProductForm({ product, categories, onClose, onSave }) {
         </Field>
         <Field label="Price (₱)"><input className="input" type="number" min="0" step="0.01" value={form.price} onChange={set('price')} required /></Field>
         <div className="sm:col-span-2"><Field label="Description"><textarea className="input min-h-20" value={form.description} onChange={set('description')} maxLength={255} /></Field></div>
-        {!form.id && <Field label="Starting stock"><input className="input" type="number" min="0" value={form.stock} onChange={set('stock')} /></Field>}
+        <Field label={form.id ? 'Stock on hand' : 'Starting stock'}>
+          <input className="input" type="number" min="0" step="1" value={form.stock} onChange={set('stock')} required />
+        </Field>
         <label className="flex items-center gap-3 self-end py-2.5 text-sm font-medium cursor-pointer">
           <input type="checkbox" className="h-4 w-4 accent-primary" checked={form.active} onChange={set('active')} />
           Show on POS

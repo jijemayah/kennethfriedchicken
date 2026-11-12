@@ -151,7 +151,7 @@ export default function POS() {
         <div className="flex items-center justify-between border-b border-line px-5 py-4">
           <div className="flex items-center gap-2">
             <h2 className="font-display text-lg font-semibold">Current Order</h2>
-            <span key={bump} className={`badge bg-primary text-white ${bump ? 'animate-pop' : ''}`}>{itemCount}</span>
+            <span key={bump} className={`badge bg-linear-to-br from-[#E8262D] to-primary-dark text-white ${bump ? 'animate-pop' : ''}`}>{itemCount}</span>
           </div>
           {activeLines.length > 0 && (
             <button className="btn-ghost px-2 py-1 text-xs" onClick={clearCart}>
