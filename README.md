@@ -48,6 +48,16 @@ cd backend
 mvn package
 java -jar target/kfc-pos.jar
 ```
+No Maven installed? Copy the PostgreSQL driver jar (`postgresql-42.7.4.jar`, from `~/.m2` or Maven Central) to `backend/target/postgresql.jar`, then from `backend/`:
+
+```bash
+javac --release 21 -cp target/postgresql.jar -d target/classes $(find src -name "*.java")
+```
+```bash
+java -cp "target/classes;target/postgresql.jar" com.kfc.pos.Main
+```
+(On macOS/Linux use `:` instead of `;` in the classpath.)
+
 The API runs on `http://localhost:8080` (check `http://localhost:8080/api/health`).
 
 ### 3. Frontend
