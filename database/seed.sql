@@ -2,15 +2,15 @@
 -- Kenneth Fried Chicken (KFC) POS - sample data. Run AFTER schema.sql.
 --
 -- DEMO ACCOUNTS (placeholder credentials for the project defense only):
---   Manager : kdrueco    / ChangeMe123
---   Cashier : jesguerra  / ChangeMe123
+--   Manager : kdrueco    / WeLoveSirBernsSirBernsFanclub123
+--   Cashier : jesguerra  / WeLoveSirBernsSirBernsFanclub123
 -- Passwords are stored as PBKDF2 hashes. Change them after deploying.
 -- =====================================================================
 
 -- ---------------------------------------------------------------- employees
 INSERT INTO employee (employee_id, first_name, last_name, username, password_hash, role) VALUES
-(1, 'John Kenneth',     'Drueco',   'kdrueco',   '120000:pj9iqa5t4TdM5z2u5RV/6Q==:fAzMXW7TMd4hKvOvrghFhfGymbFftDVZVsBqI2Qq0qQ=', 'MANAGER'),
-(2, 'Jeremiah Joshua',  'Esguerra', 'jesguerra', '120000:OMpQ6B3mRLV2TiTHS+JUEQ==:73NS8UQ8bBOlY23N4qH/JK7/+9EYWxKnXnjk9bpcfww=', 'CASHIER');
+(1, 'John Kenneth',     'Drueco',   'kdrueco',   '120000:n6dXqa2Kbf8UboS+Zvx9ww==:t3gF0Aotpz6y5AkqD7B3AK/g0gnymowDZH+sOGrhFDI=', 'MANAGER'),
+(2, 'Jeremiah Joshua',  'Esguerra', 'jesguerra', '120000:AVbLCTz7etLtyOwhJn3sdw==:z33fTEsZR1jAS7Th6YgJ9gijn77rx1KlU0ediMh3b8c=', 'CASHIER');
 
 -- ---------------------------------------------------------------- customers
 INSERT INTO customer (customer_id, full_name, phone, email) VALUES

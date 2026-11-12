@@ -39,17 +39,13 @@ export default function Login({ onLogin }) {
             </span>
             <Drumstick size={40} className="opacity-80" />
           </div>
-          <h1 className="font-display text-5xl font-extrabold leading-tight">
-            Crispy orders,
-            <br />
-            fast checkout.
+          <h1 className="max-w-lg font-display text-4xl font-extrabold leading-tight xl:text-5xl">
+            Fried chicken ko hindi makenneth (makunat)
           </h1>
-          <p className="mt-4 max-w-md text-white/80">
-            Point-of-sale system for counter staff and managers: ring up orders, accept cash, GCash, or card,
-            and keep stock up to date.
-          </p>
+          <p className="mt-4 max-w-md text-white/80">Point-of-Sale System for Restaurant Staff and Managers</p>
         </div>
-        <p className="relative text-sm text-white/60">Computer Science OOP Project</p>
+        {/* empty spacer keeps the headline centered (panel uses justify-between) */}
+        <div />
       </div>
 
       {/* form */}
@@ -111,7 +107,7 @@ export default function Login({ onLogin }) {
           <div className="mt-8 rounded-xl border border-dashed border-line p-4 text-xs text-muted">
             <p className="mb-1 font-semibold text-ink">Demo accounts (sample data only)</p>
             <p>Manager: <code>kdrueco</code> · Cashier: <code>jesguerra</code></p>
-            <p>Password for both: <code>ChangeMe123</code></p>
+            <p>Password for both: <code>WeLoveSirBernsSirBernsFanclub123</code></p>
           </div>
         </form>
       </div>

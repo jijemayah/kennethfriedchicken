@@ -38,7 +38,7 @@ Checkout (`CheckoutService.checkout`) runs in **one database transaction**: lock
 1. Create a Supabase project.
 2. In **SQL Editor**, run `database/schema.sql`, then `database/seed.sql`.
 
-Demo logins (sample data only): Manager `kdrueco`, Cashier `jesguerra`, password `ChangeMe123` for both. Change them after deploying.
+Demo logins (sample data only): Manager `kdrueco`, Cashier `jesguerra`, password `WeLoveSirBernsSirBernsFanclub123` for both. Change them after deploying.
 
 ### 2. Backend
 Copy `backend/.env.example` to `backend/.env` and fill in the **Session pooler** JDBC connection details from Supabase (Project Settings → Database).
