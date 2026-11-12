@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+/* Brand palette → Tailwind classes like bg-primary, text-ink, border-line */
+@theme {
+  --color-primary: #D71920;
+  --color-primary-dark: #A30F16;
+  --color-page: #F8F8F8;
+  --color-line: #EEEEEE;
+  --color-ink: #252525;
+  --color-muted: #777777;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Poppins", "Inter", sans-serif;
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Reusable component classes ---------- */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
+    transition-all duration-150 ease-out select-none cursor-pointer
+    active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none;
+}
+@utility btn-primary {
+  @apply btn bg-primary text-white shadow-sm shadow-primary/30 hover:bg-primary-dark hover:shadow-md hover:shadow-primary/30;
+}
+@utility btn-secondary {
+  @apply btn bg-white text-ink border border-line hover:bg-page hover:border-gray-300;
+}
+@utility btn-ghost {
+  @apply btn text-muted hover:bg-line hover:text-ink;
+}
+@utility btn-danger {
+  @apply btn bg-white text-primary border border-primary/30 hover:bg-primary hover:text-white;
+}
+@utility input {
+  @apply w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm text-ink outline-none
+    transition-all duration-150 placeholder:text-muted/70
+    focus:border-primary focus:ring-4 focus:ring-primary/10;
+}
+@utility label {
+  @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted;
+}
+@utility card {
+  @apply rounded-2xl border border-line bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03)];
+}
+@utility badge {
+  @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+}
+@utility th {
+  @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted;
+}
+@utility td {
+  @apply px-4 py-3 text-sm;
+}
+
+/* ---------- Animations (short and subtle so cashiers are not slowed down) ---------- */
+@keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes fade-out { from { opacity: 1 } to { opacity: 0 } }
+@keyframes scale-in { from { opacity: 0; transform: scale(.95) translateY(8px) } to { opacity: 1; transform: none } }
+@keyframes scale-out { from { opacity: 1; transform: none } to { opacity: 0; transform: scale(.96) translateY(6px) } }
+@keyframes rise { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }
+@keyframes toast-in { from { opacity: 0; transform: translateX(110%) } to { opacity: 1; transform: none } }
+@keyframes toast-out { from { opacity: 1; transform: none } to { opacity: 0; transform: translateX(110%) } }
+@keyframes item-in { from { opacity: 0; transform: translateX(16px); max-height: 0 } to { opacity: 1; transform: none; max-height: 120px } }
+@keyframes item-out { from { opacity: 1; transform: none; max-height: 120px } to { opacity: 0; transform: translateX(-16px); max-height: 0; padding-top: 0; padding-bottom: 0 } }
+@keyframes pop { 0% { transform: scale(1) } 40% { transform: scale(1.25) } 100% { transform: scale(1) } }
+@keyframes flash { 0% { background: rgba(215, 25, 32, .12) } 100% { background: transparent } }
+@keyframes shimmer { from { background-position: -400px 0 } to { background-position: 400px 0 } }
+@keyframes grow-up { from { transform: scaleY(0) } to { transform: scaleY(1) } }
+@keyframes grow-right { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+@keyframes spin { to { transform: rotate(360deg) } }
+@keyframes ripple { from { transform: scale(.6); opacity: .5 } to { transform: scale(1.8); opacity: 0 } }
+
+.animate-fade-in { animation: fade-in .18s ease-out both }
+.animate-fade-out { animation: fade-out .16s ease-in both }
+.animate-scale-in { animation: scale-in .22s cubic-bezier(.2,.9,.3,1.2) both }
+.animate-scale-out { animation: scale-out .16s ease-in both }
+.animate-rise { animation: rise .35s ease-out both }
+.animate-page { animation: rise .25s ease-out both }
+.animate-toast-in { animation: toast-in .3s cubic-bezier(.2,.9,.3,1.1) both }
+.animate-toast-out { animation: toast-out .25s ease-in both }
+.animate-item-in { animation: item-in .25s ease-out both, flash .9s ease-out .1s both }
+.animate-item-out { animation: item-out .2s ease-in both; overflow: hidden }
+.animate-pop { animation: pop .3s ease-out }
+.animate-grow-up { animation: grow-up .6s cubic-bezier(.2,.8,.2,1) both; transform-origin: bottom }
+.animate-grow-right { animation: grow-right .6s cubic-bezier(.2,.8,.2,1) both; transform-origin: left }
+.animate-spin-slow { animation: spin .8s linear infinite }
+.animate-ripple { animation: ripple .5s ease-out forwards }
+
+.skeleton {
+  background: linear-gradient(90deg, #eeeeee 0px, #f6f6f6 120px, #eeeeee 240px);
+  background-size: 800px 100%;
+  animation: shimmer 1.2s linear infinite;
+  border-radius: .75rem;
+}
+
+/* Stagger helper: style={{ animationDelay: ... }} is used for lists */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important }
+}
+
+/* Thin scrollbars for the POS panels */
+.scroll-thin::-webkit-scrollbar { width: 6px; height: 6px }
+.scroll-thin::-webkit-scrollbar-thumb { background: #ddd; border-radius: 99px }
+
+/* ---------- Printing receipts: only the receipt is printed ---------- */
+@media print {
+  body * { visibility: hidden !important }
+  .print-area, .print-area * { visibility: visible !important }
+  .print-area { position: absolute; left: 0; top: 0; width: 80mm; box-shadow: none !important; border: 0 !important }
+  .no-print { display: none !important }
+}
