@@ -1,7 +1,8 @@
-# secrets
+# secrets: every .env file is ignored except the templates
 .env
-.env.local
+.env.*
 *.env
+!.env.example
 
 # Java
 backend/target/

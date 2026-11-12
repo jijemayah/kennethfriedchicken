@@ -6,6 +6,19 @@ College OOP project: React + Vite + Tailwind frontend, plain Java 21 backend (JD
 React (Vercel)  →  Java HTTP API (Render)  →  JDBC  →  Supabase PostgreSQL
 ```
 
+## Live demo & login
+
+**Website:** https://frontend-phi-pied-58.vercel.app
+
+| Role | Username | Password | Can do |
+|---|---|---|---|
+| Manager | `kdrueco` | `WeLoveSirBernsSirBernsFanclub123` | Everything: POS, products, inventory, employees, dashboard, orders |
+| Cashier | `jesguerra` | `WeLoveSirBernsSirBernsFanclub123` | POS checkout, dashboard, view inventory and orders |
+
+These are demo accounts for a test website. The backend runs on Render's free plan, so the first load after a while can take 30–60 seconds while it wakes up.
+
+Test card number for card payments: `4242 4242 4242 4242` (simulated, nothing is charged).
+
 ## Folder structure
 
 ```
@@ -38,7 +51,7 @@ Checkout (`CheckoutService.checkout`) runs in **one database transaction**: lock
 1. Create a Supabase project.
 2. In **SQL Editor**, run `database/schema.sql`, then `database/seed.sql`.
 
-Demo logins (sample data only): Manager `kdrueco`, Cashier `jesguerra`, password `WeLoveSirBernsSirBernsFanclub123` for both. Change them after deploying.
+The seed creates the two demo logins listed in [Live demo & login](#live-demo--login).
 
 ### 2. Backend
 Copy `backend/.env.example` to `backend/.env` and fill in the **Session pooler** JDBC connection details from Supabase (Project Settings → Database).
