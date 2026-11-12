@@ -54,7 +54,7 @@ public final class SimpleHandlers {
         }
     }
 
-    /** GET /api/health — used by Railway to check the server is up. */
+    /** GET /api/health — used by Render to check the server is up. */
     public static class Health extends BaseHandler {
         public Health(AuthService auth) {
             super(auth);
