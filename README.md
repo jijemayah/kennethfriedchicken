@@ -3,7 +3,7 @@
 College OOP project: React + Vite + Tailwind frontend, plain Java 21 backend (JDBC, no frameworks), Supabase PostgreSQL.
 
 ```
-React (Vercel)  →  Java HTTP API (Render)  →  JDBC  →  Supabase PostgreSQL
+React (Vercel)  →  Java HTTP API (Railway)  →  JDBC  →  Supabase PostgreSQL
 ```
 
 ## Folder structure
@@ -59,7 +59,7 @@ npm run dev
 Set `VITE_API_URL` in `frontend/.env.local` if the API is not on `http://localhost:8080`.
 
 ## Deploy
-- **Backend → Render:** New Web Service → this repo → Root directory `backend` → Runtime **Docker**. Add env vars `DB_URL`, `DB_USER`, `DB_PASSWORD`, `CORS_ORIGIN` (your Vercel URL). Health check path `/api/health`.
-- **Frontend → Vercel:** Import repo → Root directory `frontend` → Framework Vite → env var `VITE_API_URL` = your Render URL.
+- **Backend → Railway:** New Project → Deploy from GitHub repo → pick this repo. In the service **Settings**, set Root Directory to `backend` (Railway then finds the `Dockerfile` and builds it). Under **Variables** add `DB_URL`, `DB_USER`, `DB_PASSWORD`, `CORS_ORIGIN` (your Vercel URL). Railway sets `PORT` itself. Under **Networking** click **Generate Domain**, and set the healthcheck path to `/api/health`.
+- **Frontend → Vercel:** Import repo → Root directory `frontend` → Framework Vite → env var `VITE_API_URL` = your Railway URL (e.g. `https://kfc-pos.up.railway.app`).
 
 Database credentials live only in backend environment variables, never in the frontend.

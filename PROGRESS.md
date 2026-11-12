@@ -12,11 +12,11 @@ _Last updated: 2026-11-13_
 
 ## Known issues / not yet verified
 - **Not yet tested against a real Supabase database** (no credentials configured). CRUD, checkout, and dashboard queries need an end-to-end run.
-- Maven is not installed on this machine; the backend was compiled with `javac`. `mvn package` runs inside the Dockerfile on Render.
+- Maven is not installed on this machine; the backend was compiled with `javac`. `mvn package` runs inside the Dockerfile on Railway.
 - Sessions are kept in memory, so everyone is logged out when the backend restarts (acceptable for the demo).
 - Order voiding/refunds are not implemented (`orders.status` and `payment.status` columns are ready for it).
 
 ## Next steps
 1. Add Supabase credentials to `backend/.env`, run `schema.sql` + `seed.sql`, and test every page end-to-end.
-2. Deploy backend to Render (Docker) and frontend to Vercel; set `CORS_ORIGIN` and `VITE_API_URL`.
+2. Deploy backend to Railway (Docker) and frontend to Vercel; set `CORS_ORIGIN` and `VITE_API_URL`.
 3. Optional: void order (manager) that restores stock, CSV export of sales.
