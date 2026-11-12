@@ -10,7 +10,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Shared plumbing for every API endpoint: CORS headers, JSON responses,
@@ -18,7 +21,12 @@ import java.util.Map;
  */
 public abstract class BaseHandler implements HttpHandler {
 
-    private static final String ALLOWED_ORIGIN = Database.env("CORS_ORIGIN", "*");
+    /**
+     * CORS_ORIGIN is a comma-separated list of allowed frontend addresses.
+     * "*" inside an entry is a wildcard, e.g. https://frontend-*-pnx1.vercel.app
+     * (each entry is turned into a regex). A lone "*" allows every origin.
+     */
+    private static final List<Pattern> ALLOWED_ORIGINS = parseOrigins(Database.env("CORS_ORIGIN", "*"));
 
     protected final AuthService auth;
 
@@ -79,10 +87,51 @@ public abstract class BaseHandler implements HttpHandler {
 
     private void addCorsHeaders(HttpExchange exchange) {
         var headers = exchange.getResponseHeaders();
-        headers.set("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
+        String origin = exchange.getRequestHeaders().getFirst("Origin");
+        if (origin != null && isAllowedOrigin(origin)) {
+            headers.set("Access-Control-Allow-Origin", origin);   // echo back the caller's own address
+        }
+        headers.set("Vary", "Origin");
         headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
         headers.set("Access-Control-Max-Age", "86400");
+    }
+
+    private static boolean isAllowedOrigin(String origin) {
+        for (Pattern pattern : ALLOWED_ORIGINS) {
+            if (pattern.matcher(origin).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** "https://frontend-*.vercel.app" → regex ^\Qhttps://frontend-\E[a-z0-9-]*\Q.vercel.app\E$ */
+    private static List<Pattern> parseOrigins(String setting) {
+        List<Pattern> patterns = new ArrayList<>();
+        for (String entry : setting.split(",")) {
+            String value = entry.trim().replaceAll("/+$", "");   // ignore a trailing slash
+            if (value.isEmpty()) {
+                continue;
+            }
+            if (value.equals("*")) {
+                patterns.add(Pattern.compile(".*"));
+                continue;
+            }
+            if (!value.matches("^https?://.*")) {
+                value = "https://" + value;                       // forgive a missing https://
+            }
+            String[] parts = value.split("\\*", -1);
+            StringBuilder regex = new StringBuilder("^");
+            for (int i = 0; i < parts.length; i++) {
+                if (i > 0) {
+                    regex.append("[a-z0-9-]*");                    // what each "*" may stand for
+                }
+                regex.append(Pattern.quote(parts[i]));
+            }
+            patterns.add(Pattern.compile(regex.append("$").toString(), Pattern.CASE_INSENSITIVE));
+        }
+        return patterns;
     }
 
     private void send(HttpExchange exchange, int status, Object body) throws IOException {
