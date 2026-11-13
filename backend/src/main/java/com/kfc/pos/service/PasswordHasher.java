@@ -7,7 +7,6 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 public final class PasswordHasher {
-
     private static final int ITERATIONS = 120_000;
     private static final int KEY_BITS = 256;
 
@@ -33,7 +32,7 @@ public final class PasswordHasher {
         byte[] salt = Base64.getDecoder().decode(parts[1]);
         byte[] expected = Base64.getDecoder().decode(parts[2]);
         byte[] actual = pbkdf2(password, salt, iterations);
-        return MessageDigest.isEqual(expected, actual);  
+        return MessageDigest.isEqual(expected, actual);
     }
 
     private static byte[] pbkdf2(String password, byte[] salt, int iterations) {

@@ -1,12 +1,10 @@
 package com.kfc.pos.model;
 
-/** ENCAPSULATION: fields are private and the setters reject invalid values. */
 public class Category {
-
     private int id;
     private String name;
     private String description;
-    private int productCount;   // read-only, filled in by the database query
+    private int productCount;
 
     public Category(int id, String name, String description) {
         this.id = id;

@@ -6,7 +6,6 @@ import com.kfc.pos.model.InventoryItem;
 import com.kfc.pos.service.AuthService;
 
 public class InventoryHandler extends BaseHandler {
-
     private final InventoryTable table;
 
     public InventoryHandler(AuthService auth, InventoryTable table) {
@@ -29,7 +28,7 @@ public class InventoryHandler extends BaseHandler {
 
         if ("adjust".equals(req.segment(1)) && req.method().equals("POST")) {
             int change = body.getInt("change", 0);
-           
+
             if (change > 0) {
                 item.addStock(change);
             } else {

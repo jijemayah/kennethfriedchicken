@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 public final class Database {
-
     private static final Map<String, String> DOT_ENV = loadDotEnv();
 
     private Database() { }

@@ -8,7 +8,6 @@ import com.kfc.pos.service.AuthService;
 import java.util.Map;
 
 public class ProductHandler extends BaseHandler {
-
     private final ProductTable table;
 
     public ProductHandler(AuthService auth, ProductTable table) {

@@ -1,22 +1,11 @@
 package com.kfc.pos.model;
 
-/**
- * INHERITANCE (parent class) + ENCAPSULATION.
- *
- * Every staff member shares these fields, so they live here once.
- * Cashier and Manager extend this class and only describe what is different:
- * their role name and what they are allowed to do.
- *
- * The class is abstract because a plain "Employee" is never created —
- * an employee is always either a Cashier or a Manager.
- */
 public abstract class Employee {
-
     private int id;
     private String firstName;
     private String lastName;
     private String username;
-    private String passwordHash;   // never sent to the frontend
+    private String passwordHash;
     private boolean active;
 
     protected Employee(int id, String firstName, String lastName, String username,
@@ -29,9 +18,6 @@ public abstract class Employee {
         this.active = active;
     }
 
-    // ---- Behaviour each subclass must define (overridden = polymorphism) ----
-
-    /** "CASHIER" or "MANAGER" — this is what gets saved in the database. */
     public abstract String getRole();
 
     public abstract boolean canManageProducts();
@@ -40,12 +26,9 @@ public abstract class Employee {
 
     public abstract boolean canManageEmployees();
 
-    /** Both roles can ring up sales, so the parent gives a shared default. */
     public boolean canProcessSales() {
         return active;
     }
-
-    // ---- Encapsulated data ----
 
     public String getFullName() {
         return firstName + " " + lastName;
@@ -81,10 +64,6 @@ public abstract class Employee {
 
     public void setActive(boolean active) { this.active = active; }
 
-    /**
-     * Creates the correct subclass from the role stored in the database.
-     * The rest of the system just works with "Employee".
-     */
     public static Employee create(String role, int id, String firstName, String lastName,
                                   String username, String passwordHash, boolean active) {
         if ("MANAGER".equalsIgnoreCase(role)) {

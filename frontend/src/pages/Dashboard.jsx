@@ -25,7 +25,6 @@ export default function Dashboard({ user }) {
         </button>
       </PageHeader>
 
-      {/* stat cards */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {!data
           ? Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28" />)
@@ -39,7 +38,6 @@ export default function Dashboard({ user }) {
       </div>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-3">
-        {/* sales chart */}
         <div className="card p-5 lg:col-span-2 animate-rise" style={{ animationDelay: '120ms' }}>
           <div className="mb-5 flex items-center justify-between">
             <h3 className="font-display font-semibold">Sales — last 7 days</h3>
@@ -70,7 +68,6 @@ export default function Dashboard({ user }) {
           )}
         </div>
 
-        {/* payment methods */}
         <div className="card p-5 animate-rise" style={{ animationDelay: '180ms' }}>
           <h3 className="mb-5 font-display font-semibold">Payment methods</h3>
           {!data ? (
@@ -92,7 +89,6 @@ export default function Dashboard({ user }) {
           )}
         </div>
 
-        {/* top products */}
         <div className="card p-5 animate-rise" style={{ animationDelay: '240ms' }}>
           <h3 className="mb-4 flex items-center gap-2 font-display font-semibold"><Trophy size={17} className="text-amber-500" /> Best sellers</h3>
           {!data ? <Skeleton className="h-40" /> : (
@@ -108,7 +104,6 @@ export default function Dashboard({ user }) {
           )}
         </div>
 
-        {/* low stock */}
         <div className="card p-5 animate-rise" style={{ animationDelay: '300ms' }}>
           <h3 className="mb-4 flex items-center gap-2 font-display font-semibold"><AlertTriangle size={17} className="text-amber-500" /> Low stock</h3>
           {!data ? <Skeleton className="h-40" /> : data.lowStock.length === 0 ? (
@@ -127,7 +122,6 @@ export default function Dashboard({ user }) {
           )}
         </div>
 
-        {/* recent orders */}
         <div className="card p-5 animate-rise" style={{ animationDelay: '360ms' }}>
           <h3 className="mb-4 font-display font-semibold">Recent orders</h3>
           {!data ? <Skeleton className="h-40" /> : (

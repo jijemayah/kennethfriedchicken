@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class ProductTable implements CrudTable<Product> {
-
     private static final String SELECT =
             "SELECT p.product_id, p.category_id, c.name AS category_name, p.name, p.description, "
             + "p.price, p.image_url, p.is_active, COALESCE(i.quantity, 0) AS quantity "

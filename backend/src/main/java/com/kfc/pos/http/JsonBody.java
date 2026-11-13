@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class JsonBody {
-
     private final Map<String, Object> values;
 
     @SuppressWarnings("unchecked")

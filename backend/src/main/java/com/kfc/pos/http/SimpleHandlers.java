@@ -8,7 +8,6 @@ import com.kfc.pos.service.AuthService;
 import java.util.Map;
 
 public final class SimpleHandlers {
-
     private SimpleHandlers() { }
 
     public static class Dashboard extends BaseHandler {

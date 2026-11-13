@@ -3,13 +3,7 @@ package com.kfc.pos.payment;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-/**
- * A payment that was already saved, read back from the database for
- * order history and receipts. It is read-only: no setters at all.
- * (A live Payment subclass is only needed while checking out.)
- */
 public class PaymentRecord {
-
     private final String method;
     private final BigDecimal amountDue;
     private final BigDecimal amountTendered;

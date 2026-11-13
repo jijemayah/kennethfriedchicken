@@ -6,7 +6,6 @@ import com.kfc.pos.model.Employee;
 import com.kfc.pos.service.AuthService;
 
 public class CategoryHandler extends BaseHandler {
-
     private final CategoryTable table;
 
     public CategoryHandler(AuthService auth, CategoryTable table) {

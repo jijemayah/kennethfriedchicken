@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderHandler extends BaseHandler {
-
     private final OrderTable orderTable;
     private final CheckoutService checkoutService;
 

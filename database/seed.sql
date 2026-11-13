@@ -1,18 +1,7 @@
--- =====================================================================
--- Kenneth Fried Chicken (KFC) POS - sample data. Run AFTER schema.sql.
---
--- DEMO ACCOUNTS (placeholder credentials for the project defense only):
---   Manager : kdrueco    / WeLoveSirBernsSirBernsFanclub123
---   Cashier : jesguerra  / WeLoveSirBernsSirBernsFanclub123
--- Passwords are stored as PBKDF2 hashes. Change them after deploying.
--- =====================================================================
-
--- ---------------------------------------------------------------- employees
 INSERT INTO employee (employee_id, first_name, last_name, username, password_hash, role) VALUES
 (1, 'John Kenneth',     'Drueco',   'kdrueco',   '120000:n6dXqa2Kbf8UboS+Zvx9ww==:t3gF0Aotpz6y5AkqD7B3AK/g0gnymowDZH+sOGrhFDI=', 'MANAGER'),
 (2, 'Jeremiah Joshua',  'Esguerra', 'jesguerra', '120000:AVbLCTz7etLtyOwhJn3sdw==:z33fTEsZR1jAS7Th6YgJ9gijn77rx1KlU0ediMh3b8c=', 'CASHIER');
 
--- ---------------------------------------------------------------- customers
 INSERT INTO customer (customer_id, full_name, phone, email) VALUES
 (1, 'Euwan Cuesta',           '09171234501', 'euwan.cuesta@example.com'),
 (2, 'Sean Gener',             '09181234502', 'sean.gener@example.com'),
@@ -20,7 +9,6 @@ INSERT INTO customer (customer_id, full_name, phone, email) VALUES
 (4, 'Jose Andre Evangelista', '09201234504', 'jose.evangelista@example.com'),
 (5, 'Jake Andrei De Vera',    '09211234505', NULL);
 
--- ---------------------------------------------------------------- categories
 INSERT INTO category (category_id, name, description) VALUES
 (1, 'Fried Chicken',       'Signature crispy fried chicken meals'),
 (2, 'Buckets',             'Sharing buckets for groups and families'),
@@ -30,7 +18,6 @@ INSERT INTO category (category_id, name, description) VALUES
 (6, 'Drinks',              'Iced tea, soda, and coffee'),
 (7, 'Desserts',            'Sweet treats and sundaes');
 
--- ---------------------------------------------------------------- products
 INSERT INTO product (product_id, category_id, name, description, price) VALUES
 ( 1, 1, '1-pc Kenneth Original',    '1 piece original recipe chicken with rice',       99.00),
 ( 2, 1, '2-pc Kenneth Original',    '2 pieces original recipe chicken with rice',     179.00),
@@ -58,8 +45,6 @@ INSERT INTO product (product_id, category_id, name, description, price) VALUES
 (24, 7, 'Mango Float Cup',          'Graham, cream and Philippine mango',              65.00),
 (25, 7, 'Egg Pie Slice',            'Classic baked egg custard pie',                   39.00);
 
--- ---------------------------------------------------------------- inventory
--- A few items are at or below the reorder level so the dashboard shows alerts.
 INSERT INTO inventory (product_id, quantity, reorder_level) VALUES
 ( 1, 120, 30), ( 2, 95, 30), ( 3, 80, 25), ( 4, 70, 25), ( 5, 60, 20),
 ( 6, 25, 8),   ( 7, 14, 6),  ( 8, 5, 6),   ( 9, 48, 15), (10, 40, 15),
@@ -67,9 +52,6 @@ INSERT INTO inventory (product_id, quantity, reorder_level) VALUES
 (16, 110, 30), (17, 85, 25), (18, 60, 20), (19, 200, 50), (20, 140, 40),
 (21, 130, 40), (22, 45, 15), (23, 6, 10),  (24, 30, 10), (25, 28, 10);
 
--- ---------------------------------------------------------------- orders
--- Dates are relative to NOW() so the dashboard always shows the last 7 days.
--- Totals start at 0 and are calculated from order_item further below.
 INSERT INTO orders (order_id, employee_id, customer_id, subtotal, vat, total, created_at) VALUES
 ( 1, 2, 1,    0, 0, 0, NOW() - INTERVAL '6 days 5 hours'),
 ( 2, 2, NULL, 0, 0, 0, NOW() - INTERVAL '6 days 3 hours'),
@@ -99,8 +81,6 @@ INSERT INTO orders (order_id, employee_id, customer_id, subtotal, vat, total, cr
 (26, 2, 1,    0, 0, 0, NOW() - INTERVAL '1 hour'),
 (27, 2, NULL, 0, 0, 0, NOW() - INTERVAL '25 minutes');
 
--- ---------------------------------------------------------------- order items
--- product_name and unit_price are copied from product (as checkout does).
 INSERT INTO order_item (order_id, product_id, product_name, quantity, unit_price, line_total)
 SELECT v.order_id, p.product_id, p.name, v.qty, p.price, p.price * v.qty
 FROM (VALUES
@@ -134,7 +114,6 @@ FROM (VALUES
 ) AS v(order_id, product_id, qty)
 JOIN product p ON p.product_id = v.product_id;
 
--- Totals = sum of lines, VAT 12%, total = subtotal + VAT (same rule as Order.java).
 UPDATE orders o SET
     subtotal = t.subtotal,
     vat      = ROUND(t.subtotal * 0.12, 2),
@@ -142,8 +121,6 @@ UPDATE orders o SET
 FROM (SELECT order_id, SUM(line_total) AS subtotal FROM order_item GROUP BY order_id) t
 WHERE o.order_id = t.order_id;
 
--- ---------------------------------------------------------------- payments
--- Cash customers hand over the next 100 bill; GCash/Card pay the exact amount.
 INSERT INTO payment (order_id, method, amount_due, amount_tendered, change_amount, reference_no, details, paid_at)
 SELECT o.order_id, m.method, o.total,
        CASE WHEN m.method = 'CASH' THEN CEIL(o.total / 100) * 100 ELSE o.total END,
@@ -166,8 +143,6 @@ JOIN (VALUES
     (25, 'CASH'), (26, 'GCASH'), (27, 'CASH')
 ) AS m(order_id, method) ON m.order_id = o.order_id;
 
--- ---------------------------------------------------------------- sequences
--- Explicit ids were used above, so move each SERIAL counter past them.
 SELECT setval('employee_employee_id_seq', (SELECT MAX(employee_id) FROM employee));
 SELECT setval('customer_customer_id_seq', (SELECT MAX(customer_id) FROM customer));
 SELECT setval('category_category_id_seq', (SELECT MAX(category_id) FROM category));

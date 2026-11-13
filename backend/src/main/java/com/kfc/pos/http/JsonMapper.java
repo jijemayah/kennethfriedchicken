@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 public final class JsonMapper {
-
     private JsonMapper() { }
 
     public static Map<String, Object> employee(Employee e) {
@@ -31,7 +30,7 @@ public final class JsonMapper {
         m.put("canManageInventory", e.canManageInventory());
         m.put("canManageEmployees", e.canManageEmployees());
         m.put("canProcessSales", e.canProcessSales());
-        return m;                  
+        return m;
     }
 
     public static Map<String, Object> category(Category c) {

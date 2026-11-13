@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public abstract class BaseHandler implements HttpHandler {
-
     private static final List<Pattern> ALLOWED_ORIGINS = parseOrigins(Database.env("CORS_ORIGIN", "*"));
 
     protected final AuthService auth;
@@ -41,7 +40,7 @@ public abstract class BaseHandler implements HttpHandler {
         } catch (ApiException e) {
             send(exchange, e.getStatus(), error(e.getMessage()));
         } catch (IllegalArgumentException | IllegalStateException e) {
-            send(exchange, 400, error(e.getMessage()));         
+            send(exchange, 400, error(e.getMessage()));
         } catch (SQLException e) {
             send(exchange, sqlStatus(e), error(sqlMessage(e)));
         } catch (Exception e) {
@@ -75,7 +74,7 @@ public abstract class BaseHandler implements HttpHandler {
         var headers = exchange.getResponseHeaders();
         String origin = exchange.getRequestHeaders().getFirst("Origin");
         if (origin != null && isAllowedOrigin(origin)) {
-            headers.set("Access-Control-Allow-Origin", origin);  
+            headers.set("Access-Control-Allow-Origin", origin);
         }
         headers.set("Vary", "Origin");
         headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -95,7 +94,7 @@ public abstract class BaseHandler implements HttpHandler {
     private static List<Pattern> parseOrigins(String setting) {
         List<Pattern> patterns = new ArrayList<>();
         for (String entry : setting.split(",")) {
-            String value = entry.trim().replaceAll("/+$", "");  
+            String value = entry.trim().replaceAll("/+$", "");
             if (value.isEmpty()) {
                 continue;
             }
@@ -104,13 +103,13 @@ public abstract class BaseHandler implements HttpHandler {
                 continue;
             }
             if (!value.matches("^https?://.*")) {
-                value = "https://" + value;                      
+                value = "https://" + value;
             }
             String[] parts = value.split("\\*", -1);
             StringBuilder regex = new StringBuilder("^");
             for (int i = 0; i < parts.length; i++) {
                 if (i > 0) {
-                    regex.append("[a-z0-9-]*");                
+                    regex.append("[a-z0-9-]*");
                 }
                 regex.append(Pattern.quote(parts[i]));
             }
@@ -139,7 +138,7 @@ public abstract class BaseHandler implements HttpHandler {
     private int sqlStatus(SQLException e) {
         String state = e.getSQLState();
         if ("23505".equals(state) || "23503".equals(state)) {
-            return 409;   
+            return 409;
         }
         if ("23514".equals(state)) {
             return 400;

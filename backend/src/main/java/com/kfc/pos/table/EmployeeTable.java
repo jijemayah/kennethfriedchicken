@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class EmployeeTable implements CrudTable<Employee> {
-
     private static final String SELECT =
             "SELECT employee_id, first_name, last_name, username, password_hash, role, is_active FROM employee ";
 
@@ -47,7 +46,7 @@ public class EmployeeTable implements CrudTable<Employee> {
             ps.setString(2, e.getLastName());
             ps.setString(3, e.getUsername());
             ps.setString(4, e.getPasswordHash());
-            ps.setString(5, e.getRole());     
+            ps.setString(5, e.getRole());
             ps.setBoolean(6, e.isActive());
             try (ResultSet rs = ps.executeQuery()) {
                 rs.next();

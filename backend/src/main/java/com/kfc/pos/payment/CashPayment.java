@@ -3,9 +3,7 @@ package com.kfc.pos.payment;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-/** POLYMORPHISM: cash is the only payment that accepts more money and gives change. */
 public class CashPayment extends Payment {
-
     private final BigDecimal amountTendered;
 
     public CashPayment(BigDecimal amountDue, BigDecimal amountTendered) {

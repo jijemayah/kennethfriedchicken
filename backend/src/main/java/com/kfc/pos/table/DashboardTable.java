@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 public class DashboardTable {
-
     private static final String TODAY = "(now() AT TIME ZONE 'Asia/Manila')::date";
     private static final String ORDER_DAY = "(o.created_at AT TIME ZONE 'Asia/Manila')::date";
 

@@ -3,22 +3,13 @@ package com.kfc.pos.model;
 import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
-/**
- * Small input checks shared by the model classes.
- * Uses REGEX (java.util.regex.Pattern) for format checks.
- */
 public final class Validator {
-
-    /** 4-20 chars: lowercase letters, digits, dot or underscore. */
     public static final Pattern USERNAME = Pattern.compile("^[a-z0-9._]{4,20}$");
 
-    /** Philippine mobile number, e.g. 09171234567. */
     public static final Pattern PH_MOBILE = Pattern.compile("^09\\d{9}$");
 
-    /** Simple e-mail format check. */
     public static final Pattern EMAIL = Pattern.compile("^[\\w.+-]+@[\\w-]+(\\.[\\w-]+)+$");
 
-    /** At least 8 characters with at least one letter and one digit. */
     public static final Pattern PASSWORD = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d).{8,64}$");
 
     private Validator() { }

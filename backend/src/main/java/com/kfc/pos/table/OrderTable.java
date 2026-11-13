@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class OrderTable {
-
     private static final String SELECT =
             "SELECT o.order_id, o.employee_id, e.first_name || ' ' || e.last_name AS employee_name, "
             + "o.customer_id, c.full_name AS customer_name, o.subtotal, o.vat, o.total, o.status, o.created_at, "
@@ -158,6 +157,5 @@ public class OrderTable {
         return order;
     }
 
-    /** An order plus its item count, for the history table. A Java record keeps it short. */
     public record OrderSummary(Order order, int itemCount) { }
 }

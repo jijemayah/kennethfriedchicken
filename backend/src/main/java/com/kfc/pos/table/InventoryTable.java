@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class InventoryTable {
-
     private static final String SELECT =
             "SELECT i.product_id, p.name AS product_name, c.name AS category_name, i.quantity, "
             + "i.reorder_level, i.updated_at FROM inventory i "

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Request {
-
     private final HttpExchange exchange;
     private final List<String> segments = new ArrayList<>();
     private final Map<String, String> query = new HashMap<>();

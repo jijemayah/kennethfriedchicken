@@ -130,7 +130,6 @@ function AdjustModal({ item, onClose, onSaved }) {
     setBusy(true);
     setError('');
     try {
-      // One request: the backend applies the difference with addStock/removeStock.
       const updated = await api(`/inventory/${item.productId}`, {
         method: 'PUT',
         body: { quantity: preview, reorderLevel: Number(reorder) },

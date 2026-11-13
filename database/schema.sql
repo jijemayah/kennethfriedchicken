@@ -1,9 +1,3 @@
--- =====================================================================
--- Kenneth Fried Chicken (KFC) POS - PostgreSQL schema (Supabase)
--- Run this first in the Supabase SQL editor, then run seed.sql.
--- WARNING: drops and recreates all POS tables.
--- =====================================================================
-
 DROP TABLE IF EXISTS payment    CASCADE;
 DROP TABLE IF EXISTS order_item CASCADE;
 DROP TABLE IF EXISTS orders     CASCADE;
@@ -13,7 +7,6 @@ DROP TABLE IF EXISTS category   CASCADE;
 DROP TABLE IF EXISTS customer   CASCADE;
 DROP TABLE IF EXISTS employee   CASCADE;
 
--- Staff who log in to the POS. role decides which Java subclass is created.
 CREATE TABLE employee (
     employee_id   SERIAL PRIMARY KEY,
     first_name    VARCHAR(60)  NOT NULL,
@@ -25,7 +18,6 @@ CREATE TABLE employee (
     created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
--- Walk-in customers are allowed (orders.customer_id may be NULL).
 CREATE TABLE customer (
     customer_id SERIAL PRIMARY KEY,
     full_name   VARCHAR(120) NOT NULL,
@@ -51,7 +43,6 @@ CREATE TABLE product (
     created_at  TIMESTAMPTZ   NOT NULL DEFAULT NOW()
 );
 
--- One inventory row per product (1:1).
 CREATE TABLE inventory (
     inventory_id  SERIAL PRIMARY KEY,
     product_id    INT         NOT NULL UNIQUE REFERENCES product (product_id) ON DELETE CASCADE,
@@ -71,7 +62,6 @@ CREATE TABLE orders (
     created_at  TIMESTAMPTZ   NOT NULL DEFAULT NOW()
 );
 
--- unit_price is copied from product at checkout so old receipts never change.
 CREATE TABLE order_item (
     order_item_id SERIAL PRIMARY KEY,
     order_id      INT           NOT NULL REFERENCES orders (order_id) ON DELETE CASCADE,
@@ -82,7 +72,6 @@ CREATE TABLE order_item (
     line_total    NUMERIC(10,2) NOT NULL CHECK (line_total >= 0)
 );
 
--- One payment per order (1:1). Card/GCash details are stored masked only.
 CREATE TABLE payment (
     payment_id      SERIAL PRIMARY KEY,
     order_id        INT           NOT NULL UNIQUE REFERENCES orders (order_id) ON DELETE CASCADE,
@@ -102,8 +91,6 @@ CREATE INDEX idx_orders_employee   ON orders (employee_id);
 CREATE INDEX idx_order_item_order  ON order_item (order_id);
 CREATE INDEX idx_order_item_prod   ON order_item (product_id);
 
--- The Java backend connects with the database role directly; block the public
--- Supabase REST API from reading these tables.
 ALTER TABLE employee   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE customer   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE category   ENABLE ROW LEVEL SECURITY;

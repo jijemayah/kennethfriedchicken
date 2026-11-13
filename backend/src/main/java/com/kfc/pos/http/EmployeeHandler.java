@@ -7,7 +7,6 @@ import com.kfc.pos.service.AuthService;
 import com.kfc.pos.service.PasswordHasher;
 
 public class EmployeeHandler extends BaseHandler {
-
     private final EmployeeTable table;
 
     public EmployeeHandler(AuthService auth, EmployeeTable table) {
@@ -28,7 +27,6 @@ public class EmployeeHandler extends BaseHandler {
                     JsonBody body = req.body();
                     String password = body.getString("password");
                     Validator.requirePassword(password);
-                    // Employee.create picks Cashier or Manager based on the role.
                     Employee created = Employee.create(body.getString("role"), 0, body.getString("firstName"),
                             body.getString("lastName"), body.getString("username"),
                             PasswordHasher.hash(password), true);
@@ -56,7 +54,7 @@ public class EmployeeHandler extends BaseHandler {
                 if (id == user.getId() && (!active || !"MANAGER".equals(role))) {
                     throw new ApiException(400, "You cannot deactivate or demote your own account");
                 }
-            
+
                 Employee updated = Employee.create(role, id, body.getString("firstName"),
                         body.getString("lastName"), body.getString("username"), hash, active);
                 table.update(updated);

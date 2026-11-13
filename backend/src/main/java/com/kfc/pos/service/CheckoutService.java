@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class CheckoutService {
-
     public record CartLine(int productId, int quantity) { }
 
     public record PaymentInput(String method, BigDecimal amountTendered, String mobileNumber,
@@ -62,7 +61,7 @@ public class CheckoutService {
                     InventoryItem stock = inventoryTable.findByProductId(conn, item.getProductId(), true)
                             .orElseThrow(() -> new IllegalArgumentException(
                                     item.getProductName() + " has no inventory record"));
-                    stock.removeStock(item.getQuantity()); 
+                    stock.removeStock(item.getQuantity());
                     inventoryTable.save(conn, stock);
                 }
 

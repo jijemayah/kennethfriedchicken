@@ -23,7 +23,6 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 public class Main {
-
     public static void main(String[] args) throws Exception {
         int port = Integer.parseInt(Database.env("PORT", "8080"));
 

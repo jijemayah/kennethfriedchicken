@@ -1,8 +1,6 @@
 package com.kfc.pos.model;
 
-/** ENCAPSULATION: phone and e-mail are format-checked with regex in the setters. */
 public class Customer {
-
     private int id;
     private String fullName;
     private String phone;

@@ -2,12 +2,7 @@ package com.kfc.pos.model;
 
 import java.math.BigDecimal;
 
-/**
- * ENCAPSULATION: a product's price can only be changed through setPrice(),
- * which refuses negative values and always keeps 2 decimal places.
- */
 public class Product {
-
     private int id;
     private int categoryId;
     private String categoryName;
@@ -16,7 +11,7 @@ public class Product {
     private BigDecimal price;
     private String imageUrl;
     private boolean active;
-    private int stockQuantity;   // copied from the inventory table for the POS screen
+    private int stockQuantity;
 
     public Product(int id, int categoryId, String name, String description,
                    BigDecimal price, String imageUrl, boolean active) {
@@ -29,7 +24,6 @@ public class Product {
         this.active = active;
     }
 
-    /** A cashier can only sell an item that is active and has stock. */
     public boolean isAvailable() {
         return active && stockQuantity > 0;
     }

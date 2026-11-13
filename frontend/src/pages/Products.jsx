@@ -34,7 +34,6 @@ export default function Products() {
   );
 }
 
-// =====================================================================
 const EMPTY_PRODUCT = { name: '', categoryId: '', price: '', description: '', stock: '0', active: true };
 
 function ProductList({ categories }) {
@@ -42,7 +41,7 @@ function ProductList({ categories }) {
   const products = useApi('/products?all=true');
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('');
-  const [editing, setEditing] = useState(null); // product object or EMPTY_PRODUCT
+  const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
   const [busy, setBusy] = useState(false);
 
@@ -168,7 +167,6 @@ function ProductForm({ product, categories, onClose, onSave }) {
   const [busy, setBusy] = useState(false);
   const [lastProduct, setLastProduct] = useState(null);
 
-  // reset the form whenever a different product is opened
   if (product && product !== lastProduct) {
     setLastProduct(product);
     setForm({ ...EMPTY_PRODUCT, ...product, categoryId: product.categoryId || '', price: product.price ?? '', description: product.description || '' });
@@ -225,7 +223,6 @@ function ProductForm({ product, categories, onClose, onSave }) {
   );
 }
 
-// =====================================================================
 function CategoryList({ categories }) {
   const toast = useToast();
   const [editing, setEditing] = useState(null);

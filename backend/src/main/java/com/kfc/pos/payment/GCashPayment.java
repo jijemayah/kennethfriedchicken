@@ -3,9 +3,7 @@ package com.kfc.pos.payment;
 import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
-/** POLYMORPHISM: GCash validates a PH mobile number instead of cash received. */
 public class GCashPayment extends Payment {
-
     private static final Pattern MOBILE = Pattern.compile("^09\\d{9}$");
 
     private final String mobileNumber;
@@ -25,13 +23,11 @@ public class GCashPayment extends Payment {
         }
     }
 
-    /** GCash-style 13 digit reference number (simulated). */
     @Override
     protected String buildReference() {
         return randomDigits(13);
     }
 
-    /** Masks the middle digits: 0917****567. */
     @Override
     public String getDetails() {
         return "GCash " + mobileNumber.replaceAll("^(\\d{4})\\d{4}(\\d{3})$", "$1****$2");

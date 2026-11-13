@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AuthHandler extends BaseHandler {
-
     public AuthHandler(AuthService auth) {
         super(auth);
     }

@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AuthService {
-
     private static final long SESSION_SECONDS = 12 * 60 * 60;
 
     private record Session(int employeeId, Instant expiresAt) { }

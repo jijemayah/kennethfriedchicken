@@ -3,12 +3,7 @@ package com.kfc.pos.payment;
 import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
-/**
- * POLYMORPHISM: card payments check the card number with the Luhn algorithm.
- * This is a simulation only — the full card number is never stored or returned.
- */
 public class CardPayment extends Payment {
-
     private static final Pattern CARD_NUMBER = Pattern.compile("^\\d{16}$");
     private static final Pattern CARD_HOLDER = Pattern.compile("^[A-Za-z][A-Za-z .'-]{1,59}$");
 
@@ -37,7 +32,6 @@ public class CardPayment extends Payment {
         }
     }
 
-    /** Simulated bank approval code. */
     @Override
     protected String buildReference() {
         return "AUTH-" + randomDigits(6);
@@ -48,7 +42,6 @@ public class CardPayment extends Payment {
         return getBrand() + " **** " + cardNumber.substring(cardNumber.length() - 4);
     }
 
-    /** Card brand from the first digits (regex). */
     public String getBrand() {
         if (cardNumber.matches("^4\\d*")) {
             return "Visa";
@@ -59,7 +52,6 @@ public class CardPayment extends Payment {
         return "Card";
     }
 
-    /** Standard checksum used by real card numbers. */
     private static boolean passesLuhnCheck(String digits) {
         int sum = 0;
         boolean doubleIt = false;

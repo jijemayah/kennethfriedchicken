@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public final class Json {
-
     private Json() { }
 
     public static String stringify(Object value) {
@@ -216,7 +215,7 @@ public final class Json {
                             sb.append((char) Integer.parseInt(text.substring(pos, pos + 4), 16));
                             pos += 4;
                         }
-                        default -> sb.append(e);  
+                        default -> sb.append(e);
                     }
                 } else {
                     sb.append(c);

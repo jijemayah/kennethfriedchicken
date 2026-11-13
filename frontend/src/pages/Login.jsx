@@ -25,7 +25,6 @@ export default function Login({ onLogin }) {
 
   return (
     <div className="grid min-h-screen bg-linear-to-br from-white via-page to-primary/[0.06] lg:grid-cols-2">
-      {/* brand panel */}
       <div className="relative hidden overflow-hidden bg-linear-to-br from-[#E8262D] via-primary to-primary-dark lg:flex lg:flex-col lg:justify-between lg:p-12 text-white">
         <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-linear-to-br from-white/20 to-white/0" />
         <div className="absolute -bottom-32 -left-16 h-[28rem] w-[28rem] rounded-full bg-linear-to-tr from-black/25 to-transparent" />
@@ -44,11 +43,9 @@ export default function Login({ onLogin }) {
           </h1>
           <p className="mt-4 max-w-md text-white/80">Point-of-Sale System for Restaurant Staff and Managers</p>
         </div>
-        {/* empty spacer keeps the headline centered (panel uses justify-between) */}
         <div />
       </div>
 
-      {/* form */}
       <div className="flex items-center justify-center p-6">
         <form onSubmit={submit} className="w-full max-w-sm animate-scale-in">
           <div className="mb-8 lg:hidden">

@@ -34,7 +34,6 @@ export default function POS() {
   const totals = cartTotals(activeLines);
   const itemCount = activeLines.reduce((n, l) => n + l.quantity, 0);
 
-  // ---------------- cart actions ----------------
   const addToCart = (product) => {
     const inCart = cart.find((l) => l.id === product.id && !l.removing);
     if ((inCart?.quantity || 0) >= product.stock) {
@@ -60,7 +59,6 @@ export default function POS() {
     setCart((lines) => lines.map((l) => (l.id === id ? { ...l, quantity: next } : l)));
   };
 
-  // Plays the slide-out animation, then removes the line.
   const removeLine = (id) => {
     setCart((lines) => lines.map((l) => (l.id === id ? { ...l, removing: true } : l)));
     setTimeout(() => setCart((lines) => lines.filter((l) => !(l.id === id && l.removing))), 200);
@@ -71,7 +69,6 @@ export default function POS() {
     setTimeout(() => setCart([]), 200);
   };
 
-  // ---------------- checkout ----------------
   const checkout = async (payment) => {
     const order = await api('/orders', {
       method: 'POST',
@@ -91,7 +88,6 @@ export default function POS() {
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_400px]">
-      {/* ================= LEFT: products ================= */}
       <section className="min-w-0">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
@@ -146,7 +142,6 @@ export default function POS() {
         )}
       </section>
 
-      {/* ================= RIGHT: cart ================= */}
       <aside className="card flex flex-col xl:sticky xl:top-22 xl:h-[calc(100vh-7rem)]">
         <div className="flex items-center justify-between border-b border-line px-5 py-4">
           <div className="flex items-center gap-2">
@@ -272,10 +267,6 @@ const METHODS = [
   { key: 'CARD', label: 'Card', icon: CreditCard },
 ];
 
-/**
- * Collects the fields for the chosen payment method.
- * The backend turns this into a CashPayment / GCashPayment / CardPayment object.
- */
 function PaymentModal({ open, total, onClose, onPay }) {
   const [method, setMethod] = useState('CASH');
   const [cash, setCash] = useState('');
@@ -324,7 +315,6 @@ function PaymentModal({ open, total, onClose, onPay }) {
           <p className="font-display text-3xl font-bold text-primary">{money(total)}</p>
         </div>
 
-        {/* segmented control with a sliding highlight */}
         <div className="relative grid grid-cols-3 rounded-xl bg-page p-1">
           <span
             className="absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-lg bg-white shadow transition-transform duration-250 ease-out"

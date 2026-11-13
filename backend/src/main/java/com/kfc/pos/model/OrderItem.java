@@ -2,12 +2,7 @@ package com.kfc.pos.model;
 
 import java.math.BigDecimal;
 
-/**
- * One line on the receipt, e.g. "2 x Chickenjoy 1pc @ 99.00".
- * ENCAPSULATION: the line total is always calculated, never set by hand.
- */
 public class OrderItem {
-
     private final int productId;
     private final String productName;
     private final BigDecimal unitPrice;

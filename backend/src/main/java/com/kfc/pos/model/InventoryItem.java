@@ -2,13 +2,7 @@ package com.kfc.pos.model;
 
 import java.time.OffsetDateTime;
 
-/**
- * ENCAPSULATION: stock quantity has no public setter.
- * It can only change through addStock() / removeStock(), which make sure
- * the quantity never goes below zero.
- */
 public class InventoryItem {
-
     private final int productId;
     private final String productName;
     private final String categoryName;

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class CategoryTable implements CrudTable<Category> {
-
     private static final String SELECT =
             "SELECT c.category_id, c.name, c.description, COUNT(p.product_id) AS product_count "
             + "FROM category c LEFT JOIN product p ON p.category_id = c.category_id AND p.is_active ";

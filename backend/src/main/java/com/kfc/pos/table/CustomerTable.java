@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class CustomerTable implements CrudTable<Customer> {
-
     private static final String SELECT = "SELECT customer_id, full_name, phone, email FROM customer ";
 
     @Override
