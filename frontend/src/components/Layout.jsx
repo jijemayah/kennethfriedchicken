@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, LogOut, Menu, X } from 'lucide-react';
 
-/** The brand photo in a round frame with a red gradient ring. */
 export function LogoMark({ size = 40, className = '' }) {
   return (
     <span
@@ -68,10 +67,8 @@ export function Layout({ pages, current, onNavigate, user, onLogout, children })
 
   return (
     <div className="min-h-screen lg:pl-64">
-      {/* desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-line bg-linear-to-b from-white via-white to-primary/[0.05] lg:block">{sidebar}</aside>
 
-      {/* mobile drawer */}
       <div className={`fixed inset-0 z-40 lg:hidden ${mobileOpen ? '' : 'pointer-events-none'}`}>
         <div
           className={`absolute inset-0 bg-black/40 transition-opacity duration-200 ${mobileOpen ? 'opacity-100' : 'opacity-0'}`}
@@ -99,14 +96,12 @@ export function Layout({ pages, current, onNavigate, user, onLogout, children })
       </header>
 
       <main className="mx-auto max-w-[1500px] p-4 sm:p-6">
-        {/* key forces a fresh entrance animation on every page change */}
         <div key={current} className="animate-page">{children}</div>
       </main>
     </div>
   );
 }
 
-/** Dropdown with a smooth open/close transition. */
 function UserMenu({ user, onLogout }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
