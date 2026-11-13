@@ -2,7 +2,6 @@ import { Printer } from 'lucide-react';
 import { Modal } from './ui';
 import { dateTime, money, PAYMENT_LABELS } from '../utils';
 
-/** Printable receipt for a saved order (from POST /orders or GET /orders/{id}). */
 export function Receipt({ order }) {
   const p = order.payment;
   return (
