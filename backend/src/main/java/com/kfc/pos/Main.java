@@ -22,10 +22,6 @@ import com.sun.net.httpserver.HttpServer;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
-/**
- * Starts the REST API using Java's built-in HTTP server (no framework).
- * Wiring is done by hand here: create the Table classes, the services, then the handlers.
- */
 public class Main {
 
     public static void main(String[] args) throws Exception {
@@ -49,8 +45,6 @@ public class Main {
         server.createContext("/api/orders", new OrderHandler(auth, orderTable, checkout));
         server.createContext("/api/employees", new EmployeeHandler(auth, employeeTable));
         server.createContext("/api/customers", new SimpleHandlers.Customers(auth, new CustomerTable()));
-
-        // Java 21 virtual threads: each request gets its own lightweight thread.
         server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
         server.start();
         System.out.println("KFC POS API running on http://localhost:" + port);
