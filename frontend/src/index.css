@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Brand palette → Tailwind classes like bg-primary, text-ink, border-line */
 @theme {
   --color-primary: #D71920;
   --color-primary-dark: #A30F16;
@@ -13,7 +12,6 @@
 }
 
 body {
-  /* soft red glows on a light gray base */
   background:
     radial-gradient(1100px 600px at 105% -10%, rgba(215, 25, 32, 0.08), transparent 60%),
     radial-gradient(900px 520px at -10% 110%, rgba(163, 15, 22, 0.06), transparent 60%),
@@ -24,7 +22,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- Reusable component classes ---------- */
 @utility btn {
   @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
     transition-all duration-150 ease-out select-none cursor-pointer
@@ -64,7 +61,6 @@ body {
   @apply px-4 py-3 text-sm;
 }
 
-/* ---------- Animations (short and subtle so cashiers are not slowed down) ---------- */
 @keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
 @keyframes fade-out { from { opacity: 1 } to { opacity: 0 } }
 @keyframes scale-in { from { opacity: 0; transform: scale(.95) translateY(8px) } to { opacity: 1; transform: none } }
@@ -105,17 +101,13 @@ body {
   border-radius: .75rem;
 }
 
-/* Stagger helper: style={{ animationDelay: ... }} is used for lists */
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important }
 }
 
-/* Thin scrollbars for the POS panels */
 .scroll-thin::-webkit-scrollbar { width: 6px; height: 6px }
 .scroll-thin::-webkit-scrollbar-thumb { background: #ddd; border-radius: 99px }
 
-/* ---------- Printing receipts: only the receipt is printed ---------- */
 @media print {
   body * { visibility: hidden !important }
   .print-area, .print-area * { visibility: visible !important }
