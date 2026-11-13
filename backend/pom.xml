@@ -15,7 +15,6 @@
     </properties>
 
     <dependencies>
-        <!-- The only dependency: the PostgreSQL JDBC driver. -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -31,7 +30,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
             </plugin>
-            <!-- Builds one runnable jar (target/kfc-pos.jar) that includes the driver. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
