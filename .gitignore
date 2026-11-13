@@ -1,18 +1,18 @@
-# secrets: every .env file is ignored except the templates
+# Ignores every .env file, except the templates
 .env
 .env.*
 *.env
 !.env.example
 
-# Java
+# Ignores unnecessary Java files
 backend/target/
 *.class
 
-# Node
+# Ignores unnecessary Node files
 node_modules/
 frontend/dist/
 
-# IDE / OS
+# Ignores unnecessary IDE / OS files
 .idea/
 .vscode/
 *.iml
