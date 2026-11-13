@@ -11,7 +11,6 @@ import Inventory from './pages/Inventory';
 import Orders from './pages/Orders';
 import Employees from './pages/Employees';
 
-// "allowed" uses the permission flags the backend computes from Cashier/Manager.
 const PAGES = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, component: Dashboard, allowed: () => true },
   { key: 'pos', label: 'Point of Sale', icon: ShoppingCart, component: POS, allowed: (u) => u.canProcessSales },
@@ -48,7 +47,6 @@ export default function App() {
     try {
       await api('/auth/logout', { method: 'POST' });
     } catch {
-      /* logging out locally is enough */
     }
     setToken(null);
     setUser(null);
