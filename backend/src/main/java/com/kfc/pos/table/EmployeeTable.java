@@ -47,7 +47,7 @@ public class EmployeeTable implements CrudTable<Employee> {
             ps.setString(2, e.getLastName());
             ps.setString(3, e.getUsername());
             ps.setString(4, e.getPasswordHash());
-            ps.setString(5, e.getRole());      // polymorphism: Cashier/Manager answer differently
+            ps.setString(5, e.getRole());     
             ps.setBoolean(6, e.isActive());
             try (ResultSet rs = ps.executeQuery()) {
                 rs.next();
@@ -74,7 +74,6 @@ public class EmployeeTable implements CrudTable<Employee> {
         }
     }
 
-    /** Employees are linked to past orders, so they are deactivated instead of deleted. */
     @Override
     public void delete(int id) throws SQLException {
         try (Connection conn = Database.getConnection();
@@ -84,7 +83,6 @@ public class EmployeeTable implements CrudTable<Employee> {
         }
     }
 
-    /** Small functional interface so findOne can accept a lambda that sets parameters. */
     private interface ParamSetter {
         void set(PreparedStatement ps) throws SQLException;
     }
