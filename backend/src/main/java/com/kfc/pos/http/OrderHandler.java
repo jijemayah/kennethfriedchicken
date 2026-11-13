@@ -12,11 +12,6 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * GET  /api/orders?from=2026-11-01&to=2026-11-13&method=CASH&q=euwan
- * GET  /api/orders/{id}
- * POST /api/orders     checkout
- */
 public class OrderHandler extends BaseHandler {
 
     private final OrderTable orderTable;
