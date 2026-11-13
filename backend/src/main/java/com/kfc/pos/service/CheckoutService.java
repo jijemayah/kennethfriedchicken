@@ -16,23 +16,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Checkout = one database TRANSACTION.
- *
- *   1. lock and read the stock of every product in the cart
- *   2. build the Order (prices come from the database, not the browser)
- *   3. process the Payment (cash / GCash / card — polymorphism)
- *   4. save order + items + payment and reduce inventory
- *
- * If ANY step fails, rollback() undoes everything, so we never get an
- * order without a payment or stock that was reduced for a failed sale.
- */
 public class CheckoutService {
 
-    /** What the cashier sent: product id + quantity. */
     public record CartLine(int productId, int quantity) { }
 
-    /** Payment fields from the checkout form. Only the ones for the chosen method are used. */
     public record PaymentInput(String method, BigDecimal amountTendered, String mobileNumber,
                                String cardNumber, String cardHolder) { }
 
@@ -58,7 +45,6 @@ public class CheckoutService {
             try {
                 Order order = new Order(cashier.getId(), customerId);
 
-                // Steps 1 + 2: check stock and use the real price from the database.
                 for (CartLine line : cart) {
                     if (line.quantity() <= 0) {
                         throw new IllegalArgumentException("Quantity must be at least 1");
@@ -67,18 +53,16 @@ public class CheckoutService {
                     order.addItem(new OrderItem(line.productId(), product.name(), product.price(), line.quantity()));
                 }
 
-                // Step 3: the checkout code does not care which subclass this is.
                 Payment payment = Payment.create(input.method(), order.getTotal(), input.amountTendered(),
                         input.mobileNumber(), input.cardNumber(), input.cardHolder());
                 payment.process();
 
-                // Step 4: save everything and reduce stock.
                 int orderId = orderTable.insert(conn, order, payment);
                 for (OrderItem item : order.getItems()) {
                     InventoryItem stock = inventoryTable.findByProductId(conn, item.getProductId(), true)
                             .orElseThrow(() -> new IllegalArgumentException(
                                     item.getProductName() + " has no inventory record"));
-                    stock.removeStock(item.getQuantity());   // throws if not enough stock
+                    stock.removeStock(item.getQuantity()); 
                     inventoryTable.save(conn, stock);
                 }
 
