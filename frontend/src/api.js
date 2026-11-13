@@ -1,4 +1,3 @@
-// Small fetch wrapper for the Java API. Only the public API URL lives in the frontend.
 const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8080').replace(/\/$/, '');
 const TOKEN_KEY = 'kfc_token';
 
@@ -19,7 +18,6 @@ export function setToken(value) {
     if (value) localStorage.setItem(TOKEN_KEY, value);
     else localStorage.removeItem(TOKEN_KEY);
   } catch {
-    /* storage blocked: keep token in memory only */
   }
 }
 
