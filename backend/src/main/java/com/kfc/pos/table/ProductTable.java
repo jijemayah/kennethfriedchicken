@@ -23,7 +23,6 @@ public class ProductTable implements CrudTable<Product> {
         return query(SELECT + "ORDER BY c.category_id, p.name");
     }
 
-    /** Only products the cashier can see on the POS screen. */
     public List<Product> findActive() throws SQLException {
         return query(SELECT + "WHERE p.is_active ORDER BY c.category_id, p.name");
     }
@@ -39,7 +38,6 @@ public class ProductTable implements CrudTable<Product> {
         }
     }
 
-    /** Inserts the product AND its inventory row in one transaction. */
     @Override
     public Product create(Product product) throws SQLException {
         String insertProduct = "INSERT INTO product (category_id, name, description, price, image_url, is_active) "
@@ -78,11 +76,6 @@ public class ProductTable implements CrudTable<Product> {
         }
     }
 
-    /**
-     * Products that appear in old orders cannot be removed (receipts need them),
-     * so those are hidden instead (is_active = false).
-     * Returns true if the row was really deleted.
-     */
     public boolean deleteOrDeactivate(int id) throws SQLException {
         try (Connection conn = Database.getConnection()) {
             boolean used;
