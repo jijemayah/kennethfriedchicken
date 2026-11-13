@@ -6,10 +6,6 @@ import com.kfc.pos.model.Validator;
 import com.kfc.pos.service.AuthService;
 import com.kfc.pos.service.PasswordHasher;
 
-/**
- * Manager only.
- * GET/POST /api/employees, PUT /api/employees/{id}, DELETE /api/employees/{id} (deactivate)
- */
 public class EmployeeHandler extends BaseHandler {
 
     private final EmployeeTable table;
@@ -60,7 +56,7 @@ public class EmployeeHandler extends BaseHandler {
                 if (id == user.getId() && (!active || !"MANAGER".equals(role))) {
                     throw new ApiException(400, "You cannot deactivate or demote your own account");
                 }
-                // A role change means a different subclass, so build a fresh object.
+            
                 Employee updated = Employee.create(role, id, body.getString("firstName"),
                         body.getString("lastName"), body.getString("username"), hash, active);
                 table.update(updated);
