@@ -15,16 +15,14 @@ export const dateTime = (value) =>
       })
     : '';
 
-export const today = () => new Date().toLocaleDateString('en-CA'); // yyyy-mm-dd
+export const today = () => new Date().toLocaleDateString('en-CA');
 
-/** Money math in centavos so 0.1 + 0.2 problems never happen. Same rule as Order.java. */
 export function cartTotals(lines) {
   const subtotal = lines.reduce((sum, l) => sum + Math.round(Number(l.price) * 100) * l.quantity, 0);
   const vat = Math.round(subtotal * 0.12);
   return { subtotal: subtotal / 100, vat: vat / 100, total: (subtotal + vat) / 100 };
 }
 
-/** Loads data from the API and tracks loading / error state. */
 export function useApi(path) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,7 +48,6 @@ export function useApi(path) {
   return { data, loading, error, reload, setData };
 }
 
-/** One icon per category so product cards are easy to scan. */
 const CATEGORY_ICONS = [
   [/chicken/i, Drumstick],
   [/bucket/i, Package],
