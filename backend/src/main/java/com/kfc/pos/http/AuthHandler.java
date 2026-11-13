@@ -6,7 +6,6 @@ import com.kfc.pos.service.AuthService;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** POST /api/auth/login, POST /api/auth/logout, GET /api/auth/me */
 public class AuthHandler extends BaseHandler {
 
     public AuthHandler(AuthService auth) {
