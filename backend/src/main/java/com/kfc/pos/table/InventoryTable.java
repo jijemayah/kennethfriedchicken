@@ -37,10 +37,6 @@ public class InventoryTable {
         }
     }
 
-    /**
-     * Version that joins an existing transaction.
-     * forUpdate = true locks the row so two cashiers cannot sell the last piece at once.
-     */
     public Optional<InventoryItem> findByProductId(Connection conn, int productId, boolean forUpdate)
             throws SQLException {
         String sql = SELECT + "WHERE i.product_id = ?" + (forUpdate ? " FOR UPDATE OF i" : "");
