@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Loader2, X, Inbox } from 'lucide-react';
 
-/**
- * Modal that fades/scales in, and plays a short exit animation before unmounting.
- * Usage: <Modal open={isOpen} onClose={close} title="...">...</Modal>
- */
 export function Modal({ open, onClose, title, children, footer, size = 'md' }) {
   const [mounted, setMounted] = useState(open);
   const [closing, setClosing] = useState(false);
@@ -18,7 +14,7 @@ export function Modal({ open, onClose, title, children, footer, size = 'md' }) {
       const t = setTimeout(() => setMounted(false), 160);
       return () => clearTimeout(t);
     }
-  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
