@@ -6,10 +6,6 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-/**
- * Hashes passwords with PBKDF2 (built into Java, no extra library).
- * Stored format: iterations:salt:hash  (salt and hash are Base64).
- */
 public final class PasswordHasher {
 
     private static final int ITERATIONS = 120_000;
@@ -37,7 +33,7 @@ public final class PasswordHasher {
         byte[] salt = Base64.getDecoder().decode(parts[1]);
         byte[] expected = Base64.getDecoder().decode(parts[2]);
         byte[] actual = pbkdf2(password, salt, iterations);
-        return MessageDigest.isEqual(expected, actual);   // constant-time comparison
+        return MessageDigest.isEqual(expected, actual);  
     }
 
     private static byte[] pbkdf2(String password, byte[] salt, int iterations) {
@@ -49,7 +45,6 @@ public final class PasswordHasher {
         }
     }
 
-    /** Run once to create a hash for seed data:  java ... PasswordHasher "MyPassword1" */
     public static void main(String[] args) {
         System.out.println(hash(args[0]));
     }
