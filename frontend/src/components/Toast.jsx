@@ -3,7 +3,6 @@ import { CheckCircle2, AlertCircle, X } from 'lucide-react';
 
 const ToastContext = createContext(null);
 
-/** Toasts slide in from the right and slide out after 3 seconds. */
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
