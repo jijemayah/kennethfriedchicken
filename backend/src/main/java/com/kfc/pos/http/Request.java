@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Easy access to the parts of an HTTP request that handlers need. */
 public class Request {
 
     private final HttpExchange exchange;
@@ -21,7 +20,6 @@ public class Request {
 
     public Request(HttpExchange exchange) {
         this.exchange = exchange;
-        // "/api/products/5" with context "/api/products" → segments ["5"]
         String context = exchange.getHttpContext().getPath();
         String rest = exchange.getRequestURI().getPath().substring(context.length());
         for (String part : rest.split("/")) {
@@ -50,7 +48,6 @@ public class Request {
         return index < segments.size() ? segments.get(index) : null;
     }
 
-    /** Reads a numeric id from the path, e.g. 5 in /api/products/5. */
     public int idAt(int index) {
         String value = segment(index);
         if (value == null || !value.matches("\\d{1,9}")) {
@@ -59,7 +56,6 @@ public class Request {
         return Integer.parseInt(value);
     }
 
-    /** Query string value, or null when missing/blank. */
     public String query(String name) {
         String value = query.get(name);
         return value == null || value.isBlank() ? null : value.trim();
@@ -87,7 +83,6 @@ public class Request {
         return status;
     }
 
-    /** e.g. setStatus(201) after creating a record. */
     public void setStatus(int status) {
         this.status = status;
     }
