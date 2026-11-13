@@ -69,7 +69,6 @@ public class CategoryTable implements CrudTable<Category> {
         }
     }
 
-    /** Fails with a foreign key error if products still use this category. */
     @Override
     public void delete(int id) throws SQLException {
         try (Connection conn = Database.getConnection();
