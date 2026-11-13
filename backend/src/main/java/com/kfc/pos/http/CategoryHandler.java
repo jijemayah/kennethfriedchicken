@@ -5,7 +5,6 @@ import com.kfc.pos.model.Category;
 import com.kfc.pos.model.Employee;
 import com.kfc.pos.service.AuthService;
 
-/** GET/POST /api/categories, PUT/DELETE /api/categories/{id} */
 public class CategoryHandler extends BaseHandler {
 
     private final CategoryTable table;
