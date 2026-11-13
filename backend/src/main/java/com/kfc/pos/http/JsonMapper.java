@@ -14,10 +14,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Converts model objects into maps that Json.stringify() can write.
- * Keeping this here means the model classes know nothing about HTTP or JSON.
- */
 public final class JsonMapper {
 
     private JsonMapper() { }
@@ -31,12 +27,11 @@ public final class JsonMapper {
         m.put("username", e.getUsername());
         m.put("role", e.getRole());
         m.put("active", e.isActive());
-        // Permissions come from the subclass (polymorphism) — the frontend uses them to show/hide pages.
         m.put("canManageProducts", e.canManageProducts());
         m.put("canManageInventory", e.canManageInventory());
         m.put("canManageEmployees", e.canManageEmployees());
         m.put("canProcessSales", e.canProcessSales());
-        return m;                       // note: password hash is never included
+        return m;                  
     }
 
     public static Map<String, Object> category(Category c) {
@@ -131,7 +126,6 @@ public final class JsonMapper {
         return m;
     }
 
-    /** Generic helper: convert a whole list with any mapper function. */
     public static <T> List<Map<String, Object>> list(List<T> items,
                                                      java.util.function.Function<T, Map<String, Object>> mapper) {
         List<Map<String, Object>> result = new ArrayList<>();
