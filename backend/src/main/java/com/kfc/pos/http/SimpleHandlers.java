@@ -7,12 +7,10 @@ import com.kfc.pos.service.AuthService;
 
 import java.util.Map;
 
-/** Small read-mostly endpoints grouped together. */
 public final class SimpleHandlers {
 
     private SimpleHandlers() { }
 
-    /** GET /api/dashboard */
     public static class Dashboard extends BaseHandler {
         private final DashboardTable table;
 
@@ -28,7 +26,6 @@ public final class SimpleHandlers {
         }
     }
 
-    /** GET /api/customers, POST /api/customers */
     public static class Customers extends BaseHandler {
         private final CustomerTable table;
 
@@ -54,7 +51,6 @@ public final class SimpleHandlers {
         }
     }
 
-    /** GET /api/health — used by Render to check the server is up. */
     public static class Health extends BaseHandler {
         public Health(AuthService auth) {
             super(auth);
