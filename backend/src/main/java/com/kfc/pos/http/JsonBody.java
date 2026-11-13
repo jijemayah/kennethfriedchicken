@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Wraps a parsed JSON object and offers typed getters,
- * so handlers can write body.getInt("quantity") instead of casting.
- */
 public class JsonBody {
 
     private final Map<String, Object> values;
@@ -64,7 +60,6 @@ public class JsonBody {
         return value instanceof Boolean b ? b : fallback;
     }
 
-    /** A list of nested JSON objects, e.g. the cart items. */
     public List<JsonBody> getObjects(String key) {
         Object value = values.get(key);
         List<JsonBody> list = new ArrayList<>();
