@@ -11,11 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Login and simple session tokens.
- * A token is a random string kept in memory; the frontend sends it in the
- * "Authorization: Bearer <token>" header. Sessions end after 12 hours or on logout.
- */
 public class AuthService {
 
     private static final long SESSION_SECONDS = 12 * 60 * 60;
@@ -30,7 +25,6 @@ public class AuthService {
         this.employeeTable = employeeTable;
     }
 
-    /** Returns a new token, or empty if the username/password is wrong. */
     public Optional<String> login(String username, String password) throws SQLException {
         if (username == null || password == null) {
             return Optional.empty();
@@ -47,10 +41,6 @@ public class AuthService {
         return Optional.of(token);
     }
 
-    /**
-     * Looks the employee up again on every request, so a deactivated
-     * employee or a changed role takes effect immediately.
-     */
     public Optional<Employee> findByToken(String token) throws SQLException {
         Session session = token == null ? null : sessions.get(token);
         if (session == null) {
