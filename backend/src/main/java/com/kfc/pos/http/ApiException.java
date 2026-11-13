@@ -1,6 +1,5 @@
 package com.kfc.pos.http;
 
-/** An error with an HTTP status code, e.g. 401 Unauthorized or 404 Not Found. */
 public class ApiException extends RuntimeException {
 
     private final int status;
