@@ -27,13 +27,8 @@ public class OrderTable {
             + "LEFT JOIN customer c ON c.customer_id = o.customer_id "
             + "LEFT JOIN payment p ON p.order_id = o.order_id ";
 
-    /** Dates are compared in Philippine time so "today" matches the store's day. */
     private static final String LOCAL_DATE = "(o.created_at AT TIME ZONE 'Asia/Manila')::date";
 
-    /**
-     * Order history with optional filters. Each filter is added only when given,
-     * and every value is still passed through a PreparedStatement parameter.
-     */
     public List<OrderSummary> search(LocalDate from, LocalDate to, String method, String text) throws SQLException {
         StringBuilder sql = new StringBuilder(SELECT + "WHERE 1 = 1 ");
         List<Object> params = new ArrayList<>();
@@ -74,7 +69,6 @@ public class OrderTable {
         }
     }
 
-    /** Full order with its items and payment, used for details and receipts. */
     public Optional<Order> findById(int id) throws SQLException {
         try (Connection conn = Database.getConnection()) {
             Order order;
@@ -102,10 +96,6 @@ public class OrderTable {
         }
     }
 
-    /**
-     * Saves the order, its items, and its payment using the caller's connection,
-     * so everything is part of the same database transaction.
-     */
     public int insert(Connection conn, Order order, Payment payment) throws SQLException {
         String orderSql = "INSERT INTO orders (employee_id, customer_id, subtotal, vat, total) "
                 + "VALUES (?, ?, ?, ?, ?) RETURNING order_id, created_at";
