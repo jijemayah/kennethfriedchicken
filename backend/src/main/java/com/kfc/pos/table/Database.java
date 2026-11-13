@@ -10,12 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Opens JDBC connections to Supabase PostgreSQL.
- *
- * Credentials come from environment variables (DB_URL, DB_USER, DB_PASSWORD).
- * For local development they can also be placed in backend/.env, which is git-ignored.
- */
 public final class Database {
 
     private static final Map<String, String> DOT_ENV = loadDotEnv();
@@ -27,7 +21,6 @@ public final class Database {
         return DriverManager.getConnection(url, require("DB_USER"), require("DB_PASSWORD"));
     }
 
-    /** Reads a setting: real environment variable first, then backend/.env. */
     public static String env(String name, String fallback) {
         String value = System.getenv(name);
         if (value == null || value.isBlank()) {
