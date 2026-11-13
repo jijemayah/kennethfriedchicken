@@ -7,11 +7,6 @@ import com.kfc.pos.service.AuthService;
 
 import java.util.Map;
 
-/**
- * GET  /api/products            active products (POS)   ?all=true → include hidden ones
- * POST /api/products            create (manager)
- * GET/PUT/DELETE /api/products/{id}
- */
 public class ProductHandler extends BaseHandler {
 
     private final ProductTable table;
@@ -66,7 +61,6 @@ public class ProductHandler extends BaseHandler {
         }
     }
 
-    /** The Product constructor and setters do all the validation. */
     private Product fromBody(int id, JsonBody body) {
         return new Product(id, body.getInt("categoryId", 0), body.getString("name"),
                 body.getString("description"), body.getDecimal("price"), body.getString("imageUrl"),
