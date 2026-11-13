@@ -8,17 +8,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * A very small JSON reader/writer so the backend needs no extra library.
- *
- *  - stringify(): Map → {...}, List → [...], String, Number, Boolean, null, dates
- *  - parse(): JSON text → Map / List / String / BigDecimal / Boolean / null
- */
 public final class Json {
 
     private Json() { }
-
-    // ------------------------------------------------------------ writing
 
     public static String stringify(Object value) {
         StringBuilder sb = new StringBuilder();
@@ -89,8 +81,6 @@ public final class Json {
         sb.append('"');
     }
 
-    // ------------------------------------------------------------ reading
-
     public static Object parse(String text) {
         Parser parser = new Parser(text);
         Object value = parser.readValue();
@@ -101,7 +91,6 @@ public final class Json {
         return value;
     }
 
-    /** Reads JSON one character at a time (a "recursive descent" parser). */
     private static final class Parser {
         private final String text;
         private int pos;
@@ -227,7 +216,7 @@ public final class Json {
                             sb.append((char) Integer.parseInt(text.substring(pos, pos + 4), 16));
                             pos += 4;
                         }
-                        default -> sb.append(e);   // \" \\ \/
+                        default -> sb.append(e);  
                     }
                 } else {
                     sb.append(c);
