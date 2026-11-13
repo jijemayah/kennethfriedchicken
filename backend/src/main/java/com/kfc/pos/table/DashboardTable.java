@@ -9,10 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Read-only report queries for the dashboard. These return plain maps because
- * they are summaries (sums and counts), not business objects.
- */
 public class DashboardTable {
 
     private static final String TODAY = "(now() AT TIME ZONE 'Asia/Manila')::date";
@@ -67,7 +63,6 @@ public class DashboardTable {
         return rows.isEmpty() ? new LinkedHashMap<>() : rows.get(0);
     }
 
-    /** Turns any result set into a list of column-name → value maps. */
     private List<Map<String, Object>> list(Connection conn, String sql) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -84,7 +79,6 @@ public class DashboardTable {
         }
     }
 
-    /** today_sales → todaySales (regex replace on each "_x"). */
     private String toCamelCase(String column) {
         return java.util.regex.Pattern.compile("_([a-z])").matcher(column)
                 .replaceAll(m -> m.group(1).toUpperCase());
