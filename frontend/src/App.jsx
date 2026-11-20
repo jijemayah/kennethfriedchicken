@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { LayoutDashboard, ShoppingCart, UtensilsCrossed, Boxes, ReceiptText, Users } from 'lucide-react';
 import { api, hasToken, setToken, setUnauthorizedHandler } from './api';
 import { Layout, Logo } from './components/Layout';
-import { Spinner } from './components/ui';
+import { BrandLoader, TopLoadingBar } from './components/ui';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import POS from './pages/POS';
@@ -54,22 +54,26 @@ export default function App() {
 
   if (checking) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 animate-fade-in">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-2 animate-fade-in">
+        <TopLoadingBar />
         <Logo />
-        <Spinner size={22} />
+        <BrandLoader message="Waking up the kitchen… the first load can take up to a minute." />
       </div>
     );
   }
 
-  if (!user) return <Login onLogin={handleLogin} />;
+  if (!user) return <><TopLoadingBar /><Login onLogin={handleLogin} /></>;
 
   const pages = PAGES.filter((p) => p.allowed(user));
   const current = pages.find((p) => p.key === page) || pages[0];
   const Page = current.component;
 
   return (
+    <>
+    <TopLoadingBar />
     <Layout pages={pages} current={current.key} onNavigate={setPage} user={user} onLogout={handleLogout}>
-      <Page user={user} />
+      <Page user={user} onNavigate={setPage} />
     </Layout>
+    </>
   );
 }

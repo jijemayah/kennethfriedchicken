@@ -37,11 +37,12 @@ export default function Employees({ user }) {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px]">
               <thead className="bg-page/60">
-                <tr><th className="th">Name</th><th className="th">Username</th><th className="th">Role</th><th className="th">Permissions</th><th className="th">Status</th><th className="th" /></tr>
+                <tr><th className="th">Employee #</th><th className="th">Name</th><th className="th">Username</th><th className="th">Role</th><th className="th">Permissions</th><th className="th">Status</th><th className="th" /></tr>
               </thead>
               <tbody>
-                {employees.data.map((e) => (
-                  <tr key={e.id} className="border-t border-line transition-colors hover:bg-page/60">
+                {employees.data.map((e, i) => (
+                  <tr key={e.id} className="border-t border-line transition-colors hover:bg-page/60 animate-fade-in" style={{ animationDelay: `${i * 30}ms` }}>
+                    <td className="td font-mono text-xs font-semibold">{e.employeeNo}</td>
                     <td className="td">
                       <div className="flex items-center gap-3">
                         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
@@ -58,7 +59,7 @@ export default function Employees({ user }) {
                       </span>
                     </td>
                     <td className="td text-xs text-muted">
-                      {[e.canProcessSales && 'Sales', e.canManageProducts && 'Products', e.canManageInventory && 'Inventory', e.canManageEmployees && 'Staff'].filter(Boolean).join(' · ') || 'None'}
+                      {[e.canProcessSales && 'Sales', e.canViewSalesHistory && 'Sales history', e.canManageProducts && 'Products', e.canManageInventory && 'Inventory', e.canManageEmployees && 'Staff'].filter(Boolean).join(' · ') || 'None'}
                     </td>
                     <td className="td">
                       <span className={`badge ${e.active ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-muted'}`}>{e.active ? 'Active' : 'Inactive'}</span>
@@ -120,7 +121,7 @@ function EmployeeForm({ employee, isSelf, onClose, onSaved }) {
     <Modal
       open={Boolean(employee)}
       onClose={onClose}
-      title={form.id ? 'Edit employee' : 'Add employee'}
+      title={form.id ? `Edit employee ${form.employeeNo || ''}` : 'Add employee (number is assigned automatically)'}
       footer={
         <>
           <button className="btn-secondary" onClick={onClose}>Cancel</button>

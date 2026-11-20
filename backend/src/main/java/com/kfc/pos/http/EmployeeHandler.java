@@ -57,6 +57,7 @@ public class EmployeeHandler extends BaseHandler {
 
                 Employee updated = Employee.create(role, id, body.getString("firstName"),
                         body.getString("lastName"), body.getString("username"), hash, active);
+                updated.setEmployeeNo(existing.getEmployeeNo());
                 table.update(updated);
                 return JsonMapper.employee(updated);
             }

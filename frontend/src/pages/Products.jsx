@@ -227,13 +227,13 @@ function CategoryList({ categories }) {
   const toast = useToast();
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
-  const [form, setForm] = useState({ name: '', description: '' });
+  const [form, setForm] = useState({ name: '', description: '', driveThru: true });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
   const open = (c) => {
     setEditing(c);
-    setForm({ name: c.name || '', description: c.description || '' });
+    setForm({ name: c.name || '', description: c.description || '', driveThru: c.driveThru ?? true });
     setError('');
   };
 
@@ -285,7 +285,9 @@ function CategoryList({ categories }) {
                 <div className="min-w-0 flex-1">
                   <p className="font-semibold">{c.name}</p>
                   <p className="truncate text-sm text-muted">{c.description || 'No description'}</p>
-                  <p className="mt-2 text-xs font-semibold text-muted">{c.productCount} active products</p>
+                  <p className="mt-2 text-xs font-semibold text-muted">
+                    {c.productCount} active products · {c.driveThru ? 'Drive-thru OK' : <span className="text-amber-600">Not at drive-thru</span>}
+                  </p>
                 </div>
                 <div className="flex gap-1 opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100">
                   <button className="btn-ghost p-2" onClick={() => open(c)} aria-label="Edit"><Pencil size={15} /></button>
@@ -312,6 +314,10 @@ function CategoryList({ categories }) {
         <form id="category-form" onSubmit={save} className="space-y-4">
           <Field label="Name"><input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required maxLength={60} /></Field>
           <Field label="Description"><input className="input" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} maxLength={255} /></Field>
+          <label className="flex items-center gap-3 text-sm font-medium cursor-pointer">
+            <input type="checkbox" className="h-4 w-4 accent-primary" checked={form.driveThru} onChange={(e) => setForm({ ...form, driveThru: e.target.checked })} />
+            Sold at the drive-thru
+          </label>
           {error && <p className="rounded-xl bg-primary/5 px-3 py-2.5 text-sm text-primary">{error}</p>}
         </form>
       </Modal>

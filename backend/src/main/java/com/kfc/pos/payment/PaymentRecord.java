@@ -11,9 +11,10 @@ public class PaymentRecord {
     private final String referenceNumber;
     private final String details;
     private final OffsetDateTime paidAt;
+    private final String status;
 
     public PaymentRecord(String method, BigDecimal amountDue, BigDecimal amountTendered, BigDecimal change,
-                         String referenceNumber, String details, OffsetDateTime paidAt) {
+                         String referenceNumber, String details, OffsetDateTime paidAt, String status) {
         this.method = method;
         this.amountDue = amountDue;
         this.amountTendered = amountTendered;
@@ -21,6 +22,7 @@ public class PaymentRecord {
         this.referenceNumber = referenceNumber;
         this.details = details;
         this.paidAt = paidAt;
+        this.status = status;
     }
 
     public String getMethod() { return method; }
@@ -36,4 +38,7 @@ public class PaymentRecord {
     public String getDetails() { return details; }
 
     public OffsetDateTime getPaidAt() { return paidAt; }
+
+    /** PAID, VOIDED or REFUNDED. */
+    public String getStatus() { return status; }
 }

@@ -59,6 +59,7 @@ export function Layout({ pages, current, onNavigate, user, onLogout, children })
       </ul>
       <div className="m-3 rounded-xl bg-page p-3 text-xs text-muted">
         Signed in as <span className="font-semibold text-ink">{user.role === 'MANAGER' ? 'Manager' : 'Cashier'}</span>
+        <span className="mt-0.5 block font-mono text-[11px]">{user.employeeNo}</span>
       </div>
     </nav>
   );
@@ -125,7 +126,7 @@ function UserMenu({ user, onLogout }) {
         </span>
         <span className="hidden text-left sm:block">
           <span className="block text-sm font-semibold leading-tight">{user.fullName}</span>
-          <span className="block text-xs text-muted">{user.role === 'MANAGER' ? 'Manager' : 'Cashier'}</span>
+          <span className="block text-xs text-muted">{user.role === 'MANAGER' ? 'Manager' : 'Cashier'} · {user.employeeNo}</span>
         </span>
         <ChevronDown size={16} className={`text-muted transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
@@ -136,7 +137,7 @@ function UserMenu({ user, onLogout }) {
       >
         <div className="px-3 py-2">
           <p className="text-sm font-semibold">{user.fullName}</p>
-          <p className="text-xs text-muted">@{user.username}</p>
+          <p className="text-xs text-muted">@{user.username} · {user.employeeNo}</p>
         </div>
         <div className="my-1 border-t border-line" />
         <button

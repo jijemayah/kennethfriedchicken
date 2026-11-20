@@ -20,6 +20,7 @@ public final class JsonMapper {
     public static Map<String, Object> employee(Employee e) {
         Map<String, Object> m = new LinkedHashMap<>();
         m.put("id", e.getId());
+        m.put("employeeNo", e.getEmployeeNo());
         m.put("firstName", e.getFirstName());
         m.put("lastName", e.getLastName());
         m.put("fullName", e.getFullName());
@@ -30,6 +31,7 @@ public final class JsonMapper {
         m.put("canManageInventory", e.canManageInventory());
         m.put("canManageEmployees", e.canManageEmployees());
         m.put("canProcessSales", e.canProcessSales());
+        m.put("canViewSalesHistory", e.canViewSalesHistory());
         return m;
     }
 
@@ -38,6 +40,7 @@ public final class JsonMapper {
         m.put("id", c.getId());
         m.put("name", c.getName());
         m.put("description", c.getDescription());
+        m.put("driveThru", c.isDriveThru());
         m.put("productCount", c.getProductCount());
         return m;
     }
@@ -78,19 +81,32 @@ public final class JsonMapper {
         return m;
     }
 
-    public static Map<String, Object> order(Order o, Integer itemCount) {
+    /** {@code viewer} decides the canVoid flag the frontend uses to show the Void / Refund buttons. */
+    public static Map<String, Object> order(Order o, Integer itemCount, Employee viewer) {
         Map<String, Object> m = new LinkedHashMap<>();
         m.put("id", o.getId());
         m.put("receiptNumber", o.getReceiptNumber());
         m.put("employeeId", o.getEmployeeId());
         m.put("employeeName", o.getEmployeeName());
+        m.put("employeeNo", o.getEmployeeNo());
         m.put("customerId", o.getCustomerId());
         m.put("customerName", o.getCustomerName());
+        m.put("orderType", o.getOrderType().name());
+        m.put("orderTypeLabel", o.getOrderType().getLabel());
+        m.put("discountType", o.getDiscountType());
+        m.put("discountIdNo", o.getDiscountIdNo());
         m.put("subtotal", o.getSubtotal());
+        m.put("discount", o.getDiscountAmount());
+        m.put("vatableSales", o.getVatableSales());
+        m.put("vatExemptSales", o.getVatExemptSales());
         m.put("vat", o.getVat());
         m.put("total", o.getTotal());
         m.put("status", o.getStatus());
         m.put("createdAt", o.getCreatedAt());
+        m.put("cancelledAt", o.getCancelledAt());
+        m.put("cancelledByName", o.getCancelledByName());
+        m.put("cancelReason", o.getCancelReason());
+        m.put("canVoid", viewer != null && viewer.canModifyOrder(o));
         m.put("itemCount", itemCount != null ? itemCount : o.getTotalQuantity());
         m.put("payment", o.getPayment() == null ? null : payment(o.getPayment()));
         if (!o.getItems().isEmpty()) {
@@ -110,6 +126,8 @@ public final class JsonMapper {
         m.put("quantity", i.getQuantity());
         m.put("unitPrice", i.getUnitPrice());
         m.put("lineTotal", i.getLineTotal());
+        m.put("discount", i.getDiscount());
+        m.put("vat", i.getVat());
         return m;
     }
 
@@ -122,6 +140,7 @@ public final class JsonMapper {
         m.put("referenceNumber", p.getReferenceNumber());
         m.put("details", p.getDetails());
         m.put("paidAt", p.getPaidAt());
+        m.put("status", p.getStatus());
         return m;
     }
 

@@ -3,6 +3,19 @@ const TOKEN_KEY = 'kfc_token';
 
 let token = readToken();
 let onUnauthorized = () => {};
+let pending = 0;
+const loadingListeners = new Set();
+
+// Number of requests in flight, for the loading bar at the top of the screen.
+export function subscribeLoading(fn) {
+  loadingListeners.add(fn);
+  fn(pending);
+  return () => loadingListeners.delete(fn);
+}
+function setPending(delta) {
+  pending += delta;
+  loadingListeners.forEach((fn) => fn(pending));
+}
 
 function readToken() {
   try {

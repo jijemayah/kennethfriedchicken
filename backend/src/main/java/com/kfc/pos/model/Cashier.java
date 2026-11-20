@@ -17,4 +17,7 @@ public class Cashier extends Employee {
 
     @Override
     public boolean canManageEmployees() { return false; }
+
+    @Override
+    public boolean canViewSalesHistory() { return false; }
 }

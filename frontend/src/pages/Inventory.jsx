@@ -28,7 +28,7 @@ export default function Inventory({ user }) {
 
   return (
     <div>
-      <PageHeader title="Inventory" subtitle={canEdit ? 'Receive deliveries and correct stock counts.' : 'Current stock levels (view only).'} />
+      <PageHeader title="Inventory" subtitle={canEdit ? 'Receive deliveries and correct stock counts.' : 'View only. Stock goes down automatically when you complete a sale and goes back up when an order is voided.'} />
 
       <div className="mb-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
         <Stat icon={Boxes} label="Products tracked" value={inventory.data?.length ?? '–'} />

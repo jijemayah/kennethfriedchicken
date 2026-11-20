@@ -1,11 +1,13 @@
 package com.kfc.pos.http;
 
-import com.kfc.pos.table.OrderTable;
+import com.kfc.pos.model.Employee;
+import com.kfc.pos.model.Order;
 import com.kfc.pos.service.AuthService;
 import com.kfc.pos.service.CheckoutService;
 import com.kfc.pos.service.CheckoutService.CartLine;
+import com.kfc.pos.service.CheckoutService.CheckoutRequest;
 import com.kfc.pos.service.CheckoutService.PaymentInput;
-import com.kfc.pos.model.Employee;
+import com.kfc.pos.table.OrderTable;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -31,9 +33,19 @@ public class OrderHandler extends BaseHandler {
             if (method != null && !method.matches("CASH|GCASH|CARD")) {
                 throw new ApiException(400, "Unknown payment method");
             }
-            List<OrderTable.OrderSummary> orders = orderTable.search(date(req.query("from")),
-                    date(req.query("to")), method, req.query("q"));
-            return JsonMapper.list(orders, s -> JsonMapper.order(s.order(), s.itemCount()));
+            String status = req.query("status");
+            if (status != null && !status.matches("COMPLETED|VOIDED|REFUNDED")) {
+                throw new ApiException(400, "Unknown order status");
+            }
+            LocalDate from = date(req.query("from"));
+            LocalDate to = date(req.query("to"));
+            if (!user.canViewSalesHistory()) {
+                // Cashiers only ever see today's orders (store time, UTC+8).
+                from = Order.storeToday();
+                to = Order.storeToday();
+            }
+            List<OrderTable.OrderSummary> orders = orderTable.search(from, to, method, status, req.query("q"));
+            return JsonMapper.list(orders, s -> JsonMapper.order(s.order(), s.itemCount(), user));
         }
 
         if (req.segmentCount() == 0 && req.method().equals("POST")) {
@@ -48,14 +60,32 @@ public class OrderHandler extends BaseHandler {
             }
             PaymentInput payment = new PaymentInput(pay.getString("method"), pay.getDecimal("amountTendered"),
                     pay.getString("mobileNumber"), pay.getString("cardNumber"), pay.getString("cardHolder"));
+            JsonBody discount = body.getObject("discount");
+            CheckoutRequest request = new CheckoutRequest(body.getString("customerName"),
+                    body.getString("orderType"),
+                    discount == null ? null : discount.getString("type"),
+                    discount == null ? null : discount.getString("idNumber"),
+                    cart, payment);
 
-            int orderId = checkoutService.checkout(user, body.getInt("customerId"), cart, payment);
+            int orderId = checkoutService.checkout(user, request);
             req.setStatus(201);
-            return JsonMapper.order(orderTable.findById(orderId).orElseThrow(), null);
+            return JsonMapper.order(orderTable.findById(orderId).orElseThrow(), null, user);
+        }
+
+        int id = req.idAt(0);
+        Order existing = orderTable.findById(id).orElseThrow(() -> notFound("Order"));
+        if (!user.canViewOrder(existing)) {
+            throw new ApiException(403, "Cashiers can only open today's orders");
         }
 
         if (req.segmentCount() == 1 && req.method().equals("GET")) {
-            return JsonMapper.order(orderTable.findById(req.idAt(0)).orElseThrow(() -> notFound("Order")), null);
+            return JsonMapper.order(existing, null, user);
+        }
+
+        String action = req.segment(1);
+        if (req.segmentCount() == 2 && req.method().equals("POST") && action.matches("void|refund")) {
+            checkoutService.cancel(user, id, action, req.body().getString("reason"));
+            return JsonMapper.order(orderTable.findById(id).orElseThrow(), null, user);
         }
         throw methodNotAllowed();
     }

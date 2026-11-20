@@ -1,6 +1,6 @@
 INSERT INTO employee (employee_id, first_name, last_name, username, password_hash, role) VALUES
-(1, 'John Kenneth',     'Drueco',   'kdrueco',   '120000:n6dXqa2Kbf8UboS+Zvx9ww==:t3gF0Aotpz6y5AkqD7B3AK/g0gnymowDZH+sOGrhFDI=', 'MANAGER'),
-(2, 'Jeremiah Joshua',  'Esguerra', 'jesguerra', '120000:AVbLCTz7etLtyOwhJn3sdw==:z33fTEsZR1jAS7Th6YgJ9gijn77rx1KlU0ediMh3b8c=', 'CASHIER');
+(1, 'John Kenneth',     'Drueco',   'kdrueco',   '120000:ieu8f+516piiRzscjYEMmw==:r2rvWbTokrK84QKU0ohdERF22AVukHVv2NJWt8gUk/g=', 'MANAGER'),
+(2, 'Jeremiah Joshua',  'Esguerra', 'jesguerra', '120000:Uuuc2BuxsXWXH+d1u+ZXxw==:jK3DKkzVL8ASc5otIM/Dvn7glbYwpwlJoBmhztRtSRQ=', 'CASHIER');
 
 INSERT INTO customer (customer_id, full_name, phone, email) VALUES
 (1, 'Euwan Cuesta',           '09171234501', 'euwan.cuesta@example.com'),
@@ -9,40 +9,41 @@ INSERT INTO customer (customer_id, full_name, phone, email) VALUES
 (4, 'Jose Andre Evangelista', '09201234504', 'jose.evangelista@example.com'),
 (5, 'Jake Andrei De Vera',    '09211234505', NULL);
 
-INSERT INTO category (category_id, name, description) VALUES
-(1, 'Fried Chicken',       'Signature crispy fried chicken meals'),
-(2, 'Buckets',             'Sharing buckets for groups and families'),
-(3, 'Burgers & Sandwiches','Chicken burgers, wraps and sandwiches'),
-(4, 'Rice Bowls',          'Rice meals topped with chicken'),
-(5, 'Sides',               'Fries, gravy, coleslaw and more'),
-(6, 'Drinks',              'Iced tea, soda, and coffee'),
-(7, 'Desserts',            'Sweet treats and sundaes');
+-- drive_thru = FALSE hides the category in the POS drive-thru mode and the backend rejects it.
+INSERT INTO category (category_id, name, description, drive_thru) VALUES
+(1, 'Fried Chicken',       'Signature crispy fried chicken meals',     TRUE),
+(2, 'Buckets',             'Sharing buckets for groups and families',  TRUE),
+(3, 'Burgers & Sandwiches','Chicken burgers, wraps and sandwiches',    TRUE),
+(4, 'Rice Bowls',          'Rice meals topped with chicken',           FALSE),
+(5, 'Sides',               'Fries, gravy, coleslaw and more',          FALSE),
+(6, 'Drinks',              'Iced tea, soda, and coffee',               TRUE),
+(7, 'Desserts',            'Sweet treats and sundaes',                 FALSE);
 
 INSERT INTO product (product_id, category_id, name, description, price) VALUES
 ( 1, 1, '1-pc Kenneth Original',    '1 piece original recipe chicken with rice',       99.00),
 ( 2, 1, '2-pc Kenneth Original',    '2 pieces original recipe chicken with rice',     179.00),
-( 3, 1, '1-pc Hot & Crispy',        '1 piece spicy crispy chicken with rice',         105.00),
-( 4, 1, '2-pc Hot & Crispy',        '2 pieces spicy crispy chicken with rice',        189.00),
-( 5, 1, '3-pc Chicken Tenders',     'Boneless tenders with honey mustard dip',        139.00),
+( 3, 1, '1-pc Hot Kenneth',         '1 piece spicy crispy chicken with rice',         105.00),
+( 4, 1, '2-pc Hot Kenneth',         '2 pieces spicy crispy chicken with rice',        189.00),
+( 5, 1, '3-pc Kenneth Tenders',     'Boneless tenders with honey mustard dip',        139.00),
 ( 6, 2, '6-pc Family Bucket',       '6 pieces chicken, good for 3',                   499.00),
 ( 7, 2, '8-pc Barkada Bucket',      '8 pieces chicken with 4 rice and 2 sides',       749.00),
 ( 8, 2, '12-pc Party Bucket',       '12 pieces chicken for the whole group',          999.00),
 ( 9, 3, 'Kenneth Zinger Burger',    'Spicy chicken fillet, lettuce and mayo',         149.00),
-(10, 3, 'Classic Chicken Sandwich', 'Crispy fillet with pickles on a brioche bun',    129.00),
-(11, 3, 'Twister Wrap',             'Chicken strips, veggies and pepper sauce',       119.00),
-(12, 4, 'Chicken Ala King Bowl',    'Creamy chicken ala king over rice',               89.00),
+(10, 3, 'Sandwich Kenneth',         'Crispy fillet with pickles on a brioche bun',    129.00),
+(11, 3, 'Drueco Wrap',              'Chicken strips, veggies and pepper sauce',       119.00),
+(12, 4, 'Kenneth Ala King Bowl',    'Creamy chicken ala king over rice',               89.00),
 (13, 4, 'Spicy Popcorn Rice Bowl',  'Popcorn chicken, spicy sauce and egg',           109.00),
-(14, 4, 'Teriyaki Chicken Bowl',    'Grilled chicken with sweet teriyaki glaze',       119.00),
+(14, 4, 'Teriyaki Kenneth Bowl',    'Grilled chicken with sweet teriyaki glaze',      119.00),
 (15, 5, 'Regular Fries',            'Golden crispy fries',                             55.00),
 (16, 5, 'Large Fries',              'Golden crispy fries, large',                      79.00),
 (17, 5, 'Mashed Potato & Gravy',    'Creamy mashed potato with signature gravy',       49.00),
 (18, 5, 'Coleslaw',                 'Fresh and creamy coleslaw',                       45.00),
 (19, 5, 'Extra Rice',               'Steamed white rice',                              25.00),
-(20, 6, 'Iced Tea (Regular)',       'House-brewed lemon iced tea',                     45.00),
-(21, 6, 'Coke (Regular)',           'Ice cold Coca-Cola',                              49.00),
+(20, 6, 'Iced Tea',                 'House-brewed lemon iced tea',                     45.00),
+(21, 6, 'Coke',                     'Ice cold Coca-Cola',                              49.00),
 (22, 6, 'Hot Brewed Coffee',        'Freshly brewed coffee',                           59.00),
-(23, 7, 'Chocolate Sundae',         'Vanilla soft serve with chocolate fudge',         49.00),
-(24, 7, 'Mango Float Cup',          'Graham, cream and Philippine mango',              65.00),
+(23, 7, 'Sundae',                   'Vanilla soft serve with chocolate fudge',         49.00),
+(24, 7, 'Mango Float',              'Graham, cream and Philippine mango',              65.00),
 (25, 7, 'Egg Pie Slice',            'Classic baked egg custard pie',                   39.00);
 
 INSERT INTO inventory (product_id, quantity, reorder_level) VALUES
@@ -52,37 +53,39 @@ INSERT INTO inventory (product_id, quantity, reorder_level) VALUES
 (16, 110, 30), (17, 85, 25), (18, 60, 20), (19, 200, 50), (20, 140, 40),
 (21, 130, 40), (22, 45, 15), (23, 6, 10),  (24, 30, 10), (25, 28, 10);
 
-INSERT INTO orders (order_id, employee_id, customer_id, subtotal, vat, total, created_at) VALUES
-( 1, 2, 1,    0, 0, 0, NOW() - INTERVAL '6 days 5 hours'),
-( 2, 2, NULL, 0, 0, 0, NOW() - INTERVAL '6 days 3 hours'),
-( 3, 1, 2,    0, 0, 0, NOW() - INTERVAL '6 days 1 hour'),
-( 4, 2, NULL, 0, 0, 0, NOW() - INTERVAL '5 days 6 hours'),
-( 5, 2, 3,    0, 0, 0, NOW() - INTERVAL '5 days 4 hours'),
-( 6, 2, 4,    0, 0, 0, NOW() - INTERVAL '5 days 2 hours'),
-( 7, 1, NULL, 0, 0, 0, NOW() - INTERVAL '4 days 7 hours'),
-( 8, 2, 5,    0, 0, 0, NOW() - INTERVAL '4 days 5 hours'),
-( 9, 2, 1,    0, 0, 0, NOW() - INTERVAL '4 days 2 hours'),
-(10, 2, NULL, 0, 0, 0, NOW() - INTERVAL '3 days 6 hours'),
-(11, 1, 2,    0, 0, 0, NOW() - INTERVAL '3 days 4 hours'),
-(12, 2, NULL, 0, 0, 0, NOW() - INTERVAL '3 days 3 hours'),
-(13, 2, 4,    0, 0, 0, NOW() - INTERVAL '3 days 1 hour'),
-(14, 2, 3,    0, 0, 0, NOW() - INTERVAL '2 days 7 hours'),
-(15, 2, NULL, 0, 0, 0, NOW() - INTERVAL '2 days 5 hours'),
-(16, 1, 5,    0, 0, 0, NOW() - INTERVAL '2 days 3 hours'),
-(17, 2, 1,    0, 0, 0, NOW() - INTERVAL '2 days 1 hour'),
-(18, 2, NULL, 0, 0, 0, NOW() - INTERVAL '1 day 6 hours'),
-(19, 2, 2,    0, 0, 0, NOW() - INTERVAL '1 day 4 hours'),
-(20, 1, NULL, 0, 0, 0, NOW() - INTERVAL '1 day 3 hours'),
-(21, 2, 4,    0, 0, 0, NOW() - INTERVAL '1 day 1 hour'),
-(22, 2, NULL, 0, 0, 0, NOW() - INTERVAL '5 hours'),
-(23, 2, 5,    0, 0, 0, NOW() - INTERVAL '4 hours'),
-(24, 1, 3,    0, 0, 0, NOW() - INTERVAL '3 hours'),
-(25, 2, NULL, 0, 0, 0, NOW() - INTERVAL '2 hours'),
-(26, 2, 1,    0, 0, 0, NOW() - INTERVAL '1 hour'),
-(27, 2, NULL, 0, 0, 0, NOW() - INTERVAL '25 minutes');
+INSERT INTO orders (order_id, employee_id, customer_id, order_type, discount_type, discount_id_no,
+                    subtotal, vat, total, created_at) VALUES
+( 1, 2, 1,    'DINE_IN',    'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '6 days 5 hours'),
+( 2, 2, NULL, 'DRIVE_THRU', 'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '6 days 3 hours'),
+( 3, 1, 2,    'DINE_IN',    'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '6 days 1 hour'),
+( 4, 2, NULL, 'TAKE_OUT',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '5 days 6 hours'),
+( 5, 2, 3,    'DINE_IN',    'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '5 days 4 hours'),
+( 6, 2, 4,    'FOOD_APP',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '5 days 2 hours'),
+( 7, 1, NULL, 'DRIVE_THRU', 'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '4 days 7 hours'),
+( 8, 2, 5,    'DINE_IN',    'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '4 days 5 hours'),
+( 9, 2, 1,    'TAKE_OUT',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '4 days 2 hours'),
+(10, 2, NULL, 'DINE_IN',    'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '3 days 6 hours'),
+(11, 1, 2,    'DELIVERY',   'SENIOR',   'OSCA-2019-004521', 0, 0, 0, NOW() - INTERVAL '3 days 4 hours'),
+(12, 2, NULL, 'TAKE_OUT',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '3 days 3 hours'),
+(13, 2, 4,    'DINE_IN',    'PWD',      'PWD-RIZ-0042-118', 0, 0, 0, NOW() - INTERVAL '3 days 1 hour'),
+(14, 2, 3,    'DINE_IN',    'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '2 days 7 hours'),
+(15, 2, 5,    'FOOD_APP',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '2 days 5 hours'),
+(16, 1, 5,    'DELIVERY',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '2 days 3 hours'),
+(17, 2, 1,    'DINE_IN',    'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '2 days 1 hour'),
+(18, 2, NULL, 'TAKE_OUT',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '1 day 6 hours'),
+(19, 2, 2,    'DRIVE_THRU', 'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '1 day 4 hours'),
+(20, 1, NULL, 'DINE_IN',    'EMPLOYEE', 'EMP-002',          0, 0, 0, NOW() - INTERVAL '1 day 3 hours'),
+(21, 2, 4,    'FOOD_APP',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '1 day 1 hour'),
+(22, 2, NULL, 'DINE_IN',    'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '5 hours'),
+(23, 2, 5,    'TAKE_OUT',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '4 hours'),
+(24, 1, 3,    'DINE_IN',    'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '3 hours'),
+(25, 2, 3,    'FOOD_APP',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '2 hours'),
+(26, 2, 1,    'DELIVERY',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '1 hour'),
+(27, 2, NULL, 'DRIVE_THRU', 'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '25 minutes');
 
-INSERT INTO order_item (order_id, product_id, product_name, quantity, unit_price, line_total)
-SELECT v.order_id, p.product_id, p.name, v.qty, p.price, p.price * v.qty
+-- Every item gets its own 12% VAT (prices are VAT-exclusive).
+INSERT INTO order_item (order_id, product_id, product_name, quantity, unit_price, line_total, discount, vat)
+SELECT v.order_id, p.product_id, p.name, v.qty, p.price, p.price * v.qty, 0, ROUND(p.price * v.qty * 0.12, 2)
 FROM (VALUES
     ( 1,  2, 1), ( 1, 20, 1), ( 1, 23, 1),
     ( 2,  1, 2), ( 2, 21, 2),
@@ -102,7 +105,7 @@ FROM (VALUES
     (16,  6, 1), (16, 17, 2), (16, 20, 3),
     (17, 14, 1), (17, 22, 1),
     (18,  1, 3), (18, 19, 1), (18, 20, 3),
-    (19,  9, 2), (19, 16, 1), (19, 21, 2),
+    (19,  9, 2), (19, 21, 2),
     (20,  7, 1), (20, 24, 2), (20, 20, 4),
     (21,  3, 1), (21, 17, 1), (21, 21, 1),
     (22,  2, 1), (22, 23, 1),
@@ -114,11 +117,34 @@ FROM (VALUES
 ) AS v(order_id, product_id, qty)
 JOIN product p ON p.product_id = v.product_id;
 
+-- Senior/PWD: VAT-exempt, 20% off each item until the ₱250 cap is used up (same rule as SeniorPwdDiscount.java).
+UPDATE order_item oi SET vat = 0, discount = d.amount
+FROM (
+    SELECT x.order_item_id,
+           LEAST(x.raw, GREATEST(250 - COALESCE(SUM(x.raw) OVER (PARTITION BY x.order_id ORDER BY x.order_item_id
+                 ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING), 0), 0)) AS amount
+    FROM (SELECT oi.order_item_id, oi.order_id, ROUND(oi.line_total * 0.20, 2) AS raw
+          FROM order_item oi JOIN orders o ON o.order_id = oi.order_id
+          WHERE o.discount_type IN ('SENIOR', 'PWD')) x
+) d
+WHERE oi.order_item_id = d.order_item_id;
+
+-- Employee: 10% off one unit of the most expensive item, VAT is computed after the discount (EmployeeDiscount.java).
+UPDATE order_item oi SET discount = ROUND(oi.unit_price * 0.10, 2),
+                         vat = ROUND((oi.line_total - ROUND(oi.unit_price * 0.10, 2)) * 0.12, 2)
+FROM (SELECT DISTINCT ON (oi.order_id) oi.order_item_id
+      FROM order_item oi JOIN orders o ON o.order_id = oi.order_id
+      WHERE o.discount_type = 'EMPLOYEE'
+      ORDER BY oi.order_id, oi.unit_price DESC, oi.order_item_id) t
+WHERE oi.order_item_id = t.order_item_id;
+
 UPDATE orders o SET
     subtotal = t.subtotal,
-    vat      = ROUND(t.subtotal * 0.12, 2),
-    total    = t.subtotal + ROUND(t.subtotal * 0.12, 2)
-FROM (SELECT order_id, SUM(line_total) AS subtotal FROM order_item GROUP BY order_id) t
+    discount = t.discount,
+    vat      = t.vat,
+    total    = t.subtotal - t.discount + t.vat
+FROM (SELECT order_id, SUM(line_total) AS subtotal, SUM(discount) AS discount, SUM(vat) AS vat
+      FROM order_item GROUP BY order_id) t
 WHERE o.order_id = t.order_id;
 
 INSERT INTO payment (order_id, method, amount_due, amount_tendered, change_amount, reference_no, details, paid_at)
@@ -142,6 +168,16 @@ JOIN (VALUES
     (19, 'GCASH'), (20, 'CARD'), (21, 'CASH'), (22, 'CASH'), (23, 'GCASH'), (24, 'CARD'),
     (25, 'CASH'), (26, 'GCASH'), (27, 'CASH')
 ) AS m(order_id, method) ON m.order_id = o.order_id;
+
+-- Sample void (stock returned) and refund (stock stays deducted).
+UPDATE orders SET status = 'VOIDED', cancelled_at = created_at + INTERVAL '6 minutes', cancelled_by = 1,
+                  cancel_reason = 'Wrong items punched in'
+WHERE order_id = 9;
+UPDATE orders SET status = 'REFUNDED', cancelled_at = created_at + INTERVAL '40 minutes', cancelled_by = 1,
+                  cancel_reason = 'Customer complaint: food was cold'
+WHERE order_id = 18;
+UPDATE payment p SET status = o.status FROM orders o
+WHERE o.order_id = p.order_id AND o.status <> 'COMPLETED';
 
 SELECT setval('employee_employee_id_seq', (SELECT MAX(employee_id) FROM employee));
 SELECT setval('customer_customer_id_seq', (SELECT MAX(customer_id) FROM customer));

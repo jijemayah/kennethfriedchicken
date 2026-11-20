@@ -12,8 +12,8 @@ React (Vercel)  →  Java HTTP API (Render)  →  JDBC  →  Supabase PostgreSQL
 
 | Role | Username | Password | Can do |
 |---|---|---|---|
-| Manager | `kdrueco` | `WeLoveSirBernsSirBernsFanclub123` | Everything: POS, products, inventory, employees, dashboard, orders |
-| Cashier | `jesguerra` | `WeLoveSirBernsSirBernsFanclub123` | POS checkout, dashboard, view inventory and orders |
+| Manager | `kdrueco` | `DYzGjCPrkTdw6dmR` | Everything: POS, products, inventory, employees, dashboard, orders |
+| Cashier | `jesguerra` | `Jg3LGvthhKX6p9We` | POS checkout, dashboard, view inventory and orders |
 
 These are demo accounts for a test website. The backend runs on Render's free plan, so the first load after a while can take 30–60 seconds while it wakes up.
 
@@ -39,9 +39,13 @@ frontend/   React app — src/pages (Login, Dashboard, POS, Products, Inventory,
 | **Encapsulation** | `Product`, `Order`, `InventoryItem`, `Employee` | Fields are `private`. `Product.setPrice()` rejects negatives. `Order` has no setters for subtotal/VAT/total; they are recalculated in `addItem()`. `InventoryItem` stock only changes through `addStock()`/`removeStock()`, which never allow negative stock. |
 | **Inheritance** | `Employee` → `Cashier`, `Manager` | Shared fields (name, username, password hash) are written once in `Employee`. Subclasses only define their role and permissions. |
 | **Polymorphism** | `Payment` → `CashPayment`, `GCashPayment`, `CardPayment`; also `Employee.canManageProducts()` | `CheckoutService` holds a `Payment` variable and calls `payment.process()`. Java runs the cash, GCash, or card version at runtime. Permission checks call `user.canManageInventory()` without checking which subclass it is. |
-| **Abstraction** | `abstract class Payment` | It declares `validate()`, `buildReference()`, `getDetails()` without code. Checkout uses the payment without knowing how each method is validated. |
+| **Abstraction** | `abstract class Payment`, `abstract class Discount` | `Payment` declares `validate()`, `buildReference()`, `getDetails()` without code. `Discount` declares `calculate()`; `Order` calls `discount.apply(items)` without knowing which discount it is. |
+| Polymorphism (discounts) | `Discount` → `NoDiscount`, `SeniorPwdDiscount`, `EmployeeDiscount` | Senior/PWD: VAT-exempt, 20% off up to ₱250. Employee: 10% off one unit of the most expensive item, VAT still charged. |
+| RBAC | `Employee.canViewSalesHistory()`, `canViewOrder()`, `canModifyOrder()` | Managers see all history and reports. Cashiers only see today (UTC+8), can void/refund only today's orders, and can only generate the daily report. Enforced in the backend, not just hidden in the UI. |
 | Generics | `CrudTable<T>`, `JsonMapper.list()` | One CRUD interface reused for `Category`, `Product`, `Employee`, `Customer`. |
-| Regex | `Validator`, `GCashPayment`, `CardPayment` | Username, PH mobile number (`^09\d{9}$`), 16-digit card, card brand, masking `0917****567`. |
+| Regex | `Validator`, `GCashPayment`, `CardPayment`, `Discount` | Username, PH mobile number (`^09\d{9}$`), 16-digit card, card brand, masking `0917****567`, employee number `^EMP-\d{3,}$`, ID numbers. |
+
+VAT is computed **per item** (12% of each line after its discount), then added up. Void = money back and items back to stock. Refund = money back, stock stays deducted; both are taken off sales on the day they happen.
 
 Checkout (`CheckoutService.checkout`) runs in **one database transaction**: lock stock → build order with database prices → process payment → insert order, items, payment → reduce stock → `commit()`. Any error → `rollback()`.
 
@@ -50,6 +54,8 @@ Checkout (`CheckoutService.checkout`) runs in **one database transaction**: lock
 ### 1. Database (Supabase)
 1. Create a Supabase project.
 2. In **SQL Editor**, run `database/schema.sql`, then `database/seed.sql`.
+
+**Already have a database with real orders?** Run `database/migration.sql` instead. It adds the new columns (employee number, order type, discounts, per-item VAT, void/refund) and renames the menu items without deleting anything. `schema.sql` drops all tables.
 
 The seed creates the two demo logins listed in [Live demo & login](#live-demo--login).
 

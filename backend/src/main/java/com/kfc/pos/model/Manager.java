@@ -17,4 +17,7 @@ public class Manager extends Employee {
 
     @Override
     public boolean canManageEmployees() { return isActive(); }
+
+    @Override
+    public boolean canViewSalesHistory() { return isActive(); }
 }

@@ -9,6 +9,9 @@ DROP TABLE IF EXISTS employee   CASCADE;
 
 CREATE TABLE employee (
     employee_id   SERIAL PRIMARY KEY,
+    employee_no   VARCHAR(12)  GENERATED ALWAYS AS (
+                      'EMP-' || CASE WHEN employee_id < 1000 THEN LPAD(employee_id::text, 3, '0')
+                                     ELSE employee_id::text END) STORED UNIQUE,
     first_name    VARCHAR(60)  NOT NULL,
     last_name     VARCHAR(60)  NOT NULL,
     username      VARCHAR(30)  NOT NULL UNIQUE,
@@ -29,7 +32,8 @@ CREATE TABLE customer (
 CREATE TABLE category (
     category_id SERIAL PRIMARY KEY,
     name        VARCHAR(60)  NOT NULL UNIQUE,
-    description VARCHAR(255)
+    description VARCHAR(255),
+    drive_thru  BOOLEAN      NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE product (
@@ -52,14 +56,25 @@ CREATE TABLE inventory (
 );
 
 CREATE TABLE orders (
-    order_id    SERIAL PRIMARY KEY,
-    employee_id INT           NOT NULL REFERENCES employee (employee_id),
-    customer_id INT           REFERENCES customer (customer_id) ON DELETE SET NULL,
-    subtotal    NUMERIC(10,2) NOT NULL CHECK (subtotal >= 0),
-    vat         NUMERIC(10,2) NOT NULL CHECK (vat >= 0),
-    total       NUMERIC(10,2) NOT NULL CHECK (total >= 0),
-    status      VARCHAR(12)   NOT NULL DEFAULT 'COMPLETED' CHECK (status IN ('COMPLETED', 'VOIDED')),
-    created_at  TIMESTAMPTZ   NOT NULL DEFAULT NOW()
+    order_id       SERIAL PRIMARY KEY,
+    employee_id    INT           NOT NULL REFERENCES employee (employee_id),
+    customer_id    INT           REFERENCES customer (customer_id) ON DELETE SET NULL,
+    order_type     VARCHAR(12)   NOT NULL DEFAULT 'DINE_IN'
+                   CHECK (order_type IN ('DINE_IN', 'TAKE_OUT', 'DELIVERY', 'FOOD_APP', 'DRIVE_THRU')),
+    subtotal       NUMERIC(10,2) NOT NULL CHECK (subtotal >= 0),
+    discount_type  VARCHAR(10)   NOT NULL DEFAULT 'NONE'
+                   CHECK (discount_type IN ('NONE', 'SENIOR', 'PWD', 'EMPLOYEE')),
+    discount_id_no VARCHAR(30),
+    discount       NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (discount >= 0),
+    vat            NUMERIC(10,2) NOT NULL CHECK (vat >= 0),
+    total          NUMERIC(10,2) NOT NULL CHECK (total >= 0),
+    status         VARCHAR(12)   NOT NULL DEFAULT 'COMPLETED' CHECK (status IN ('COMPLETED', 'VOIDED', 'REFUNDED')),
+    created_at     TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
+    cancelled_at   TIMESTAMPTZ,
+    cancelled_by   INT           REFERENCES employee (employee_id),
+    cancel_reason  VARCHAR(200),
+    CHECK ((status = 'COMPLETED') = (cancelled_at IS NULL)),
+    CHECK ((discount_type = 'NONE') = (discount_id_no IS NULL))
 );
 
 CREATE TABLE order_item (
@@ -69,7 +84,9 @@ CREATE TABLE order_item (
     product_name  VARCHAR(100)  NOT NULL,
     quantity      INT           NOT NULL CHECK (quantity > 0),
     unit_price    NUMERIC(10,2) NOT NULL CHECK (unit_price >= 0),
-    line_total    NUMERIC(10,2) NOT NULL CHECK (line_total >= 0)
+    line_total    NUMERIC(10,2) NOT NULL CHECK (line_total >= 0),
+    discount      NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (discount >= 0 AND discount <= line_total),
+    vat           NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (vat >= 0)
 );
 
 CREATE TABLE payment (
@@ -81,15 +98,17 @@ CREATE TABLE payment (
     change_amount   NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (change_amount >= 0),
     reference_no    VARCHAR(40)   NOT NULL,
     details         VARCHAR(100),
-    status          VARCHAR(10)   NOT NULL DEFAULT 'PAID' CHECK (status IN ('PAID', 'REFUNDED')),
+    status          VARCHAR(10)   NOT NULL DEFAULT 'PAID' CHECK (status IN ('PAID', 'VOIDED', 'REFUNDED')),
     paid_at         TIMESTAMPTZ   NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_product_category  ON product (category_id);
-CREATE INDEX idx_orders_created_at ON orders (created_at);
-CREATE INDEX idx_orders_employee   ON orders (employee_id);
-CREATE INDEX idx_order_item_order  ON order_item (order_id);
-CREATE INDEX idx_order_item_prod   ON order_item (product_id);
+CREATE INDEX idx_product_category    ON product (category_id);
+CREATE INDEX idx_orders_created_at   ON orders (created_at);
+CREATE INDEX idx_orders_cancelled_at ON orders (cancelled_at);
+CREATE INDEX idx_orders_employee     ON orders (employee_id);
+CREATE INDEX idx_order_item_order    ON order_item (order_id);
+CREATE INDEX idx_order_item_prod     ON order_item (product_id);
+CREATE INDEX idx_customer_name       ON customer (LOWER(full_name));
 
 ALTER TABLE employee   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE customer   ENABLE ROW LEVEL SECURITY;

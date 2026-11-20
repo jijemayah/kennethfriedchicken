@@ -2,6 +2,7 @@ package com.kfc.pos.table;
 
 import com.kfc.pos.model.Order;
 import com.kfc.pos.model.OrderItem;
+import com.kfc.pos.model.OrderType;
 import com.kfc.pos.payment.Payment;
 import com.kfc.pos.payment.PaymentRecord;
 
@@ -18,17 +19,22 @@ import java.util.Optional;
 
 public class OrderTable {
     private static final String SELECT =
-            "SELECT o.order_id, o.employee_id, e.first_name || ' ' || e.last_name AS employee_name, "
-            + "o.customer_id, c.full_name AS customer_name, o.subtotal, o.vat, o.total, o.status, o.created_at, "
+            "SELECT o.order_id, o.employee_id, e.first_name || ' ' || e.last_name AS employee_name, e.employee_no, "
+            + "o.customer_id, c.full_name AS customer_name, o.order_type, o.discount_type, o.discount_id_no, "
+            + "o.subtotal, o.discount, o.vat, o.total, o.status, o.created_at, "
+            + "o.cancelled_at, o.cancel_reason, x.first_name || ' ' || x.last_name AS cancelled_by_name, "
             + "p.method, p.amount_due, p.amount_tendered, p.change_amount, p.reference_no, p.details, p.paid_at, "
+            + "p.status AS payment_status, "
             + "(SELECT COALESCE(SUM(oi.quantity), 0) FROM order_item oi WHERE oi.order_id = o.order_id) AS item_count "
             + "FROM orders o JOIN employee e ON e.employee_id = o.employee_id "
+            + "LEFT JOIN employee x ON x.employee_id = o.cancelled_by "
             + "LEFT JOIN customer c ON c.customer_id = o.customer_id "
             + "LEFT JOIN payment p ON p.order_id = o.order_id ";
 
     private static final String LOCAL_DATE = "(o.created_at AT TIME ZONE 'Asia/Manila')::date";
 
-    public List<OrderSummary> search(LocalDate from, LocalDate to, String method, String text) throws SQLException {
+    public List<OrderSummary> search(LocalDate from, LocalDate to, String method, String status, String text)
+            throws SQLException {
         StringBuilder sql = new StringBuilder(SELECT + "WHERE 1 = 1 ");
         List<Object> params = new ArrayList<>();
         if (from != null) {
@@ -42,6 +48,10 @@ public class OrderTable {
         if (method != null) {
             sql.append("AND p.method = ? ");
             params.add(method);
+        }
+        if (status != null) {
+            sql.append("AND o.status = ? ");
+            params.add(status);
         }
         if (text != null) {
             sql.append("AND (CAST(o.order_id AS TEXT) LIKE ? OR c.full_name ILIKE ? "
@@ -70,41 +80,52 @@ public class OrderTable {
 
     public Optional<Order> findById(int id) throws SQLException {
         try (Connection conn = Database.getConnection()) {
-            Order order;
-            try (PreparedStatement ps = conn.prepareStatement(SELECT + "WHERE o.order_id = ?")) {
-                ps.setInt(1, id);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (!rs.next()) {
-                        return Optional.empty();
-                    }
-                    order = mapOrder(rs);
-                }
-            }
-            String itemsSql = "SELECT product_id, product_name, unit_price, quantity FROM order_item "
-                    + "WHERE order_id = ? ORDER BY order_item_id";
-            try (PreparedStatement ps = conn.prepareStatement(itemsSql)) {
-                ps.setInt(1, id);
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        order.loadItem(new OrderItem(rs.getInt("product_id"), rs.getString("product_name"),
-                                rs.getBigDecimal("unit_price"), rs.getInt("quantity")));
-                    }
-                }
-            }
-            return Optional.of(order);
+            return findById(conn, id, false);
         }
     }
 
+    /** With {@code forUpdate}, the order row stays locked until the transaction ends. */
+    public Optional<Order> findById(Connection conn, int id, boolean forUpdate) throws SQLException {
+        Order order;
+        String sql = SELECT + "WHERE o.order_id = ?" + (forUpdate ? " FOR UPDATE OF o" : "");
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    return Optional.empty();
+                }
+                order = mapOrder(rs);
+            }
+        }
+        String itemsSql = "SELECT product_id, product_name, unit_price, quantity, discount, vat FROM order_item "
+                + "WHERE order_id = ? ORDER BY order_item_id";
+        try (PreparedStatement ps = conn.prepareStatement(itemsSql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    order.loadItem(new OrderItem(rs.getInt("product_id"), rs.getString("product_name"),
+                            rs.getBigDecimal("unit_price"), rs.getInt("quantity"),
+                            rs.getBigDecimal("discount"), rs.getBigDecimal("vat")));
+                }
+            }
+        }
+        return Optional.of(order);
+    }
+
     public int insert(Connection conn, Order order, Payment payment) throws SQLException {
-        String orderSql = "INSERT INTO orders (employee_id, customer_id, subtotal, vat, total) "
-                + "VALUES (?, ?, ?, ?, ?) RETURNING order_id, created_at";
+        String orderSql = "INSERT INTO orders (employee_id, customer_id, order_type, discount_type, discount_id_no, "
+                + "subtotal, discount, vat, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING order_id, created_at";
         int orderId;
         try (PreparedStatement ps = conn.prepareStatement(orderSql)) {
             ps.setInt(1, order.getEmployeeId());
             ps.setObject(2, order.getCustomerId());
-            ps.setBigDecimal(3, order.getSubtotal());
-            ps.setBigDecimal(4, order.getVat());
-            ps.setBigDecimal(5, order.getTotal());
+            ps.setString(3, order.getOrderType().name());
+            ps.setString(4, order.getDiscountType());
+            ps.setString(5, order.getDiscountIdNo());
+            ps.setBigDecimal(6, order.getSubtotal());
+            ps.setBigDecimal(7, order.getDiscountAmount());
+            ps.setBigDecimal(8, order.getVat());
+            ps.setBigDecimal(9, order.getTotal());
             try (ResultSet rs = ps.executeQuery()) {
                 rs.next();
                 orderId = rs.getInt("order_id");
@@ -113,8 +134,8 @@ public class OrderTable {
             }
         }
 
-        String itemSql = "INSERT INTO order_item (order_id, product_id, product_name, quantity, unit_price, line_total) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
+        String itemSql = "INSERT INTO order_item (order_id, product_id, product_name, quantity, unit_price, "
+                + "line_total, discount, vat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(itemSql)) {
             for (OrderItem item : order.getItems()) {
                 ps.setInt(1, orderId);
@@ -123,6 +144,8 @@ public class OrderTable {
                 ps.setInt(4, item.getQuantity());
                 ps.setBigDecimal(5, item.getUnitPrice());
                 ps.setBigDecimal(6, item.getLineTotal());
+                ps.setBigDecimal(7, item.getDiscount());
+                ps.setBigDecimal(8, item.getVat());
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -143,16 +166,41 @@ public class OrderTable {
         return orderId;
     }
 
+    /** Saves a void or refund. The payment row gets the same status as the order. */
+    public void saveCancellation(Connection conn, Order order, int cancelledBy) throws SQLException {
+        String sql = "UPDATE orders SET status = ?, cancelled_at = NOW(), cancelled_by = ?, cancel_reason = ? "
+                + "WHERE order_id = ? AND status = 'COMPLETED'";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, order.getStatus());
+            ps.setInt(2, cancelledBy);
+            ps.setString(3, order.getCancelReason());
+            ps.setInt(4, order.getId());
+            if (ps.executeUpdate() != 1) {
+                throw new IllegalStateException("This order was already changed by someone else");
+            }
+        }
+        try (PreparedStatement ps = conn.prepareStatement("UPDATE payment SET status = ? WHERE order_id = ?")) {
+            ps.setString(1, order.getStatus());
+            ps.setInt(2, order.getId());
+            ps.executeUpdate();
+        }
+    }
+
     private Order mapOrder(ResultSet rs) throws SQLException {
         Order order = new Order(rs.getInt("order_id"), rs.getInt("employee_id"), rs.getString("employee_name"),
                 (Integer) rs.getObject("customer_id"), rs.getString("customer_name"),
-                rs.getBigDecimal("subtotal"), rs.getBigDecimal("vat"), rs.getBigDecimal("total"),
-                rs.getString("status"), rs.getObject("created_at", OffsetDateTime.class));
+                OrderType.parse(rs.getString("order_type")), rs.getString("discount_type"),
+                rs.getString("discount_id_no"), rs.getBigDecimal("subtotal"), rs.getBigDecimal("discount"),
+                rs.getBigDecimal("vat"), rs.getBigDecimal("total"), rs.getString("status"),
+                rs.getObject("created_at", OffsetDateTime.class));
+        order.setEmployeeNo(rs.getString("employee_no"));
+        order.loadCancellation(rs.getObject("cancelled_at", OffsetDateTime.class),
+                rs.getString("cancelled_by_name"), rs.getString("cancel_reason"));
         if (rs.getString("method") != null) {
             order.setPayment(new PaymentRecord(rs.getString("method"), rs.getBigDecimal("amount_due"),
                     rs.getBigDecimal("amount_tendered"), rs.getBigDecimal("change_amount"),
                     rs.getString("reference_no"), rs.getString("details"),
-                    rs.getObject("paid_at", OffsetDateTime.class)));
+                    rs.getObject("paid_at", OffsetDateTime.class), rs.getString("payment_status")));
         }
         return order;
     }

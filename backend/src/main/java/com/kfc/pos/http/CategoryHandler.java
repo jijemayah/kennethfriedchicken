@@ -24,7 +24,9 @@ public class CategoryHandler extends BaseHandler {
                 case "POST": {
                     requirePermission(user.canManageProducts());
                     JsonBody body = req.body();
-                    Category created = table.create(new Category(0, body.getString("name"), body.getString("description")));
+                    Category category = new Category(0, body.getString("name"), body.getString("description"));
+                    category.setDriveThru(body.getBoolean("driveThru", true));
+                    Category created = table.create(category);
                     req.setStatus(201);
                     return JsonMapper.category(created);
                 }
@@ -41,6 +43,7 @@ public class CategoryHandler extends BaseHandler {
                 JsonBody body = req.body();
                 category.setName(body.getString("name"));
                 category.setDescription(body.getString("description"));
+                category.setDriveThru(body.getBoolean("driveThru", category.isDriveThru()));
                 table.update(category);
                 return JsonMapper.category(category);
             }

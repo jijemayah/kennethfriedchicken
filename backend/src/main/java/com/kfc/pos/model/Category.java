@@ -5,6 +5,7 @@ public class Category {
     private String name;
     private String description;
     private int productCount;
+    private boolean driveThru = true;
 
     public Category(int id, String name, String description) {
         this.id = id;
@@ -27,6 +28,11 @@ public class Category {
     public void setDescription(String description) {
         this.description = Validator.optionalText(description, 255);
     }
+
+    /** False for categories that are not sold at the drive-thru (rice bowls, sides, desserts). */
+    public boolean isDriveThru() { return driveThru; }
+
+    public void setDriveThru(boolean driveThru) { this.driveThru = driveThru; }
 
     public int getProductCount() { return productCount; }
 

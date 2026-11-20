@@ -8,6 +8,7 @@ import com.kfc.pos.table.EmployeeTable;
 import com.kfc.pos.table.InventoryTable;
 import com.kfc.pos.table.OrderTable;
 import com.kfc.pos.table.ProductTable;
+import com.kfc.pos.table.ReportTable;
 import com.kfc.pos.http.AuthHandler;
 import com.kfc.pos.http.CategoryHandler;
 import com.kfc.pos.http.EmployeeHandler;
@@ -30,20 +31,22 @@ public class Main {
         ProductTable productTable = new ProductTable();
         InventoryTable inventoryTable = new InventoryTable();
         OrderTable orderTable = new OrderTable();
+        CustomerTable customerTable = new CustomerTable();
 
         AuthService auth = new AuthService(employeeTable);
-        CheckoutService checkout = new CheckoutService(orderTable, inventoryTable);
+        CheckoutService checkout = new CheckoutService(orderTable, inventoryTable, customerTable);
 
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/api/health", new SimpleHandlers.Health(auth));
         server.createContext("/api/auth", new AuthHandler(auth));
         server.createContext("/api/dashboard", new SimpleHandlers.Dashboard(auth, new DashboardTable()));
+        server.createContext("/api/reports", new SimpleHandlers.Reports(auth, new ReportTable()));
         server.createContext("/api/categories", new CategoryHandler(auth, new CategoryTable()));
         server.createContext("/api/products", new ProductHandler(auth, productTable));
         server.createContext("/api/inventory", new InventoryHandler(auth, inventoryTable));
         server.createContext("/api/orders", new OrderHandler(auth, orderTable, checkout));
         server.createContext("/api/employees", new EmployeeHandler(auth, employeeTable));
-        server.createContext("/api/customers", new SimpleHandlers.Customers(auth, new CustomerTable()));
+        server.createContext("/api/customers", new SimpleHandlers.Customers(auth, customerTable));
         server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
         server.start();
         System.out.println("KFC POS API running on http://localhost:" + port);

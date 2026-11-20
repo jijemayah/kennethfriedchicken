@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Loader2, X, Inbox } from 'lucide-react';
+import { subscribeLoading } from '../api';
 
 export function Modal({ open, onClose, title, children, footer, size = 'md' }) {
   const [mounted, setMounted] = useState(open);
@@ -76,6 +77,43 @@ export function ConfirmModal({ open, title, message, confirmLabel = 'Confirm', d
 
 export function Spinner({ size = 16 }) {
   return <Loader2 size={size} className="animate-spin-slow" />;
+}
+
+/** Thin red bar at the very top of the screen while any request is running. */
+export function TopLoadingBar() {
+  const [active, setActive] = useState(false);
+  useEffect(() => {
+    let timer;
+    const unsubscribe = subscribeLoading((n) => {
+      clearTimeout(timer);
+      // Small delay so very fast requests don't flicker the bar.
+      timer = n > 0 ? setTimeout(() => setActive(true), 120) : setTimeout(() => setActive(false), 150);
+    });
+    return () => { clearTimeout(timer); unsubscribe(); };
+  }, []);
+  return (
+    <div className={`pointer-events-none fixed inset-x-0 top-0 z-[60] h-[3px] overflow-hidden transition-opacity duration-200 no-print ${active ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="h-full w-full bg-linear-to-r from-primary-dark via-[#F04A50] to-primary animate-loading-bar" />
+    </div>
+  );
+}
+
+/** Bouncing logo inside a spinning ring, with three pulsing dots. Used for full-page loading. */
+export function BrandLoader({ message = 'Loading…', size = 72 }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-4 py-10 animate-fade-in" role="status" aria-live="polite">
+      <div className="relative" style={{ width: size + 16, height: size + 16 }}>
+        <span className="absolute inset-0 rounded-full border-4 border-primary/15 border-t-primary animate-ring-spin" />
+        <img src="/logo.png" alt="" className="absolute inset-2 rounded-full border-2 border-white bg-white object-cover shadow-md animate-logo-bounce" style={{ width: size, height: size }} />
+      </div>
+      <div className="flex items-center gap-1.5">
+        {[0, 1, 2].map((i) => (
+          <span key={i} className="h-2 w-2 rounded-full bg-primary animate-dot-wave" style={{ animationDelay: `${i * 0.16}s` }} />
+        ))}
+      </div>
+      <p className="text-sm font-medium text-muted">{message}</p>
+    </div>
+  );
 }
 
 export function Skeleton({ className = '' }) {

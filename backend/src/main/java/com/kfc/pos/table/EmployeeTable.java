@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class EmployeeTable implements CrudTable<Employee> {
     private static final String SELECT =
-            "SELECT employee_id, first_name, last_name, username, password_hash, role, is_active FROM employee ";
+            "SELECT employee_id, employee_no, first_name, last_name, username, password_hash, role, is_active FROM employee ";
 
     @Override
     public List<Employee> findAll() throws SQLException {
@@ -39,7 +39,7 @@ public class EmployeeTable implements CrudTable<Employee> {
     @Override
     public Employee create(Employee e) throws SQLException {
         String sql = "INSERT INTO employee (first_name, last_name, username, password_hash, role, is_active) "
-                + "VALUES (?, ?, ?, ?, ?, ?) RETURNING employee_id";
+                + "VALUES (?, ?, ?, ?, ?, ?) RETURNING employee_id, employee_no";
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, e.getFirstName());
@@ -51,6 +51,7 @@ public class EmployeeTable implements CrudTable<Employee> {
             try (ResultSet rs = ps.executeQuery()) {
                 rs.next();
                 e.setId(rs.getInt(1));
+                e.setEmployeeNo(rs.getString(2));
             }
             return e;
         }
@@ -97,8 +98,10 @@ public class EmployeeTable implements CrudTable<Employee> {
     }
 
     private Employee map(ResultSet rs) throws SQLException {
-        return Employee.create(rs.getString("role"), rs.getInt("employee_id"), rs.getString("first_name"),
+        Employee e = Employee.create(rs.getString("role"), rs.getInt("employee_id"), rs.getString("first_name"),
                 rs.getString("last_name"), rs.getString("username"), rs.getString("password_hash"),
                 rs.getBoolean("is_active"));
+        e.setEmployeeNo(rs.getString("employee_no"));
+        return e;
     }
 }

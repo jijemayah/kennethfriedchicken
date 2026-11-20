@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class CategoryTable implements CrudTable<Category> {
     private static final String SELECT =
-            "SELECT c.category_id, c.name, c.description, COUNT(p.product_id) AS product_count "
+            "SELECT c.category_id, c.name, c.description, c.drive_thru, COUNT(p.product_id) AS product_count "
             + "FROM category c LEFT JOIN product p ON p.category_id = c.category_id AND p.is_active ";
 
     @Override
@@ -43,11 +43,12 @@ public class CategoryTable implements CrudTable<Category> {
 
     @Override
     public Category create(Category category) throws SQLException {
-        String sql = "INSERT INTO category (name, description) VALUES (?, ?) RETURNING category_id";
+        String sql = "INSERT INTO category (name, description, drive_thru) VALUES (?, ?, ?) RETURNING category_id";
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, category.getName());
             ps.setString(2, category.getDescription());
+            ps.setBoolean(3, category.isDriveThru());
             try (ResultSet rs = ps.executeQuery()) {
                 rs.next();
                 category.setId(rs.getInt(1));
@@ -58,12 +59,13 @@ public class CategoryTable implements CrudTable<Category> {
 
     @Override
     public void update(Category category) throws SQLException {
-        String sql = "UPDATE category SET name = ?, description = ? WHERE category_id = ?";
+        String sql = "UPDATE category SET name = ?, description = ?, drive_thru = ? WHERE category_id = ?";
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, category.getName());
             ps.setString(2, category.getDescription());
-            ps.setInt(3, category.getId());
+            ps.setBoolean(3, category.isDriveThru());
+            ps.setInt(4, category.getId());
             ps.executeUpdate();
         }
     }
@@ -81,6 +83,7 @@ public class CategoryTable implements CrudTable<Category> {
         Category category = new Category(rs.getInt("category_id"), rs.getString("name"),
                 rs.getString("description"));
         category.setProductCount(rs.getInt("product_count"));
+        category.setDriveThru(rs.getBoolean("drive_thru"));
         return category;
     }
 }
