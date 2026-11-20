@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Eye, Ban, Undo2, CalendarClock } from 'lucide-react';
+import { Search, Eye, Ban, Undo2 } from 'lucide-react';
 import { api } from '../api';
 import { useToast } from '../components/Toast';
 import { Modal, PageHeader, TableSkeleton, EmptyState, ErrorBox, Skeleton, Spinner } from '../components/ui';
@@ -55,16 +55,8 @@ export default function Orders({ user }) {
     <div>
       <PageHeader
         title="Order History"
-        subtitle={history
-          ? 'Search past transactions, reprint receipts, and void or refund orders.'
-          : "Today's orders only. Void or refund today's completed orders."}
+        subtitle={history ? 'Search past transactions, reprint receipts, and void or refund orders.' : undefined}
       />
-
-      {!history && (
-        <div className="mb-4 flex items-center gap-2 rounded-2xl bg-blue-50 px-4 py-3 text-sm text-blue-800 animate-rise">
-          <CalendarClock size={17} /> The list resets at midnight (Philippine time). Ask a manager for older orders.
-        </div>
-      )}
 
       <form onSubmit={submit} className={`card mb-5 grid gap-3 p-4 sm:grid-cols-2 ${history ? 'lg:grid-cols-[1fr_auto_auto_auto_auto_auto]' : 'lg:grid-cols-[1fr_auto_auto_auto]'}`}>
         <div className="relative">
