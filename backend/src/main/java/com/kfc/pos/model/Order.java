@@ -27,6 +27,7 @@ public class Order {
     private final String discountType;
     private final String discountIdNo;
     private String status = "COMPLETED";
+    private OrderStatus orderStatus = OrderStatus.PREPARING;
     private OffsetDateTime createdAt;
     private OffsetDateTime cancelledAt;
     private String cancelledByName;
@@ -127,6 +128,29 @@ public class Order {
         this.status = newStatus;
         this.cancelledByName = by.getFullName();
         this.cancelledAt = OffsetDateTime.now();
+    }
+
+    public void changeOrderStatus(OrderStatus newStatus, Employee by) {
+        if (!isCompleted()) {
+            throw new IllegalStateException("A " + status.toLowerCase() + " order cannot change status");
+        }
+        if (!by.canUpdateOrderStatus(this)) {
+            throw new IllegalStateException("Cashiers can only update today's orders");
+        }
+        if (!newStatus.isAllowedFor(orderType)) {
+            throw new IllegalArgumentException(newStatus.getLabel() + " is only for delivery orders");
+        }
+        this.orderStatus = newStatus;
+    }
+
+    public void loadOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public OrderStatus getOrderStatus() { return orderStatus; }
+
+    public OrderStatus getNextOrderStatus() {
+        return isCompleted() ? orderStatus.next(orderType) : null;
     }
 
     public boolean isCompleted() {

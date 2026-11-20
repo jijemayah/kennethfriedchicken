@@ -2,6 +2,7 @@ package com.kfc.pos.table;
 
 import com.kfc.pos.model.Order;
 import com.kfc.pos.model.OrderItem;
+import com.kfc.pos.model.OrderStatus;
 import com.kfc.pos.model.OrderType;
 import com.kfc.pos.payment.Payment;
 import com.kfc.pos.payment.PaymentRecord;
@@ -21,7 +22,7 @@ public class OrderTable {
     private static final String SELECT =
             "SELECT o.order_id, o.employee_id, e.first_name || ' ' || e.last_name AS employee_name, e.employee_no, "
             + "o.customer_id, c.full_name AS customer_name, o.order_type, o.discount_type, o.discount_id_no, "
-            + "o.subtotal, o.discount, o.vat, o.total, o.status, o.created_at, "
+            + "o.subtotal, o.discount, o.vat, o.total, o.status, o.order_status, o.created_at, "
             + "o.cancelled_at, o.cancel_reason, x.first_name || ' ' || x.last_name AS cancelled_by_name, "
             + "p.method, p.amount_due, p.amount_tendered, p.change_amount, p.reference_no, p.details, p.paid_at, "
             + "p.status AS payment_status, "
@@ -114,7 +115,8 @@ public class OrderTable {
 
     public int insert(Connection conn, Order order, Payment payment) throws SQLException {
         String orderSql = "INSERT INTO orders (employee_id, customer_id, order_type, discount_type, discount_id_no, "
-                + "subtotal, discount, vat, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING order_id, created_at";
+                + "subtotal, discount, vat, total, order_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+                + "RETURNING order_id, created_at";
         int orderId;
         try (PreparedStatement ps = conn.prepareStatement(orderSql)) {
             ps.setInt(1, order.getEmployeeId());
@@ -126,6 +128,7 @@ public class OrderTable {
             ps.setBigDecimal(7, order.getDiscountAmount());
             ps.setBigDecimal(8, order.getVat());
             ps.setBigDecimal(9, order.getTotal());
+            ps.setString(10, order.getOrderStatus().name());
             try (ResultSet rs = ps.executeQuery()) {
                 rs.next();
                 orderId = rs.getInt("order_id");
@@ -186,6 +189,18 @@ public class OrderTable {
         }
     }
 
+    public void saveOrderStatus(Order order) throws SQLException {
+        String sql = "UPDATE orders SET order_status = ? WHERE order_id = ? AND status = 'COMPLETED'";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, order.getOrderStatus().name());
+            ps.setInt(2, order.getId());
+            if (ps.executeUpdate() != 1) {
+                throw new IllegalStateException("This order was voided or refunded by someone else");
+            }
+        }
+    }
+
     private Order mapOrder(ResultSet rs) throws SQLException {
         Order order = new Order(rs.getInt("order_id"), rs.getInt("employee_id"), rs.getString("employee_name"),
                 (Integer) rs.getObject("customer_id"), rs.getString("customer_name"),
@@ -194,6 +209,7 @@ public class OrderTable {
                 rs.getBigDecimal("vat"), rs.getBigDecimal("total"), rs.getString("status"),
                 rs.getObject("created_at", OffsetDateTime.class));
         order.setEmployeeNo(rs.getString("employee_no"));
+        order.loadOrderStatus(OrderStatus.parse(rs.getString("order_status")));
         order.loadCancellation(rs.getObject("cancelled_at", OffsetDateTime.class),
                 rs.getString("cancelled_by_name"), rs.getString("cancel_reason"));
         if (rs.getString("method") != null) {

@@ -6,6 +6,7 @@ import com.kfc.pos.model.Employee;
 import com.kfc.pos.model.InventoryItem;
 import com.kfc.pos.model.Order;
 import com.kfc.pos.model.OrderItem;
+import com.kfc.pos.model.OrderStatus;
 import com.kfc.pos.model.Product;
 import com.kfc.pos.payment.PaymentRecord;
 
@@ -102,6 +103,17 @@ public final class JsonMapper {
         m.put("vat", o.getVat());
         m.put("total", o.getTotal());
         m.put("status", o.getStatus());
+        m.put("orderStatus", o.getOrderStatus().name());
+        m.put("orderStatusLabel", o.getOrderStatus().getLabel());
+        OrderStatus next = o.getNextOrderStatus();
+        m.put("nextOrderStatus", next == null ? null : next.name());
+        m.put("nextOrderStatusLabel", next == null ? null : next.getLabel());
+        List<String> allowed = new ArrayList<>();
+        for (OrderStatus s : OrderStatus.allowedFor(o.getOrderType())) {
+            allowed.add(s.name());
+        }
+        m.put("allowedOrderStatuses", allowed);
+        m.put("canUpdateStatus", viewer != null && o.isCompleted() && viewer.canUpdateOrderStatus(o));
         m.put("createdAt", o.getCreatedAt());
         m.put("cancelledAt", o.getCancelledAt());
         m.put("cancelledByName", o.getCancelledByName());

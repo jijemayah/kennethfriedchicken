@@ -19,6 +19,10 @@ public enum OrderType {
         return this == DELIVERY || this == FOOD_APP;
     }
 
+    public boolean isDelivery() {
+        return this == DELIVERY || this == FOOD_APP;
+    }
+
     public static OrderType parse(String value) {
         if (value == null || value.isBlank()) {
             return DINE_IN;

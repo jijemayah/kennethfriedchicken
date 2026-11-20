@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LayoutDashboard, ShoppingCart, UtensilsCrossed, Boxes, ReceiptText, Users } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, ChefHat, UtensilsCrossed, Boxes, ReceiptText, Users } from 'lucide-react';
 import { api, hasToken, setToken, setUnauthorizedHandler } from './api';
 import { Layout, Logo } from './components/Layout';
 import { BrandLoader, TopLoadingBar } from './components/ui';
@@ -9,11 +9,13 @@ import POS from './pages/POS';
 import Products from './pages/Products';
 import Inventory from './pages/Inventory';
 import Orders from './pages/Orders';
+import OrderStatus from './pages/OrderStatus';
 import Employees from './pages/Employees';
 
 const PAGES = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, component: Dashboard, allowed: () => true },
   { key: 'pos', label: 'Point of Sale', icon: ShoppingCart, component: POS, allowed: (u) => u.canProcessSales },
+  { key: 'status', label: 'Order Status', icon: ChefHat, component: OrderStatus, allowed: () => true },
   { key: 'products', label: 'Products', icon: UtensilsCrossed, component: Products, allowed: (u) => u.canManageProducts },
   { key: 'inventory', label: 'Inventory', icon: Boxes, component: Inventory, allowed: () => true },
   { key: 'orders', label: 'Order History', icon: ReceiptText, component: Orders, allowed: () => true },

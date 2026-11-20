@@ -69,6 +69,8 @@ CREATE TABLE orders (
     vat            NUMERIC(10,2) NOT NULL CHECK (vat >= 0),
     total          NUMERIC(10,2) NOT NULL CHECK (total >= 0),
     status         VARCHAR(12)   NOT NULL DEFAULT 'COMPLETED' CHECK (status IN ('COMPLETED', 'VOIDED', 'REFUNDED')),
+    order_status   VARCHAR(16)   NOT NULL DEFAULT 'PREPARING'
+                   CHECK (order_status IN ('PREPARING', 'READY', 'OUT_FOR_DELIVERY', 'COMPLETED')),
     created_at     TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
     cancelled_at   TIMESTAMPTZ,
     cancelled_by   INT           REFERENCES employee (employee_id),

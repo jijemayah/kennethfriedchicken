@@ -179,6 +179,8 @@ WHERE order_id = 18;
 UPDATE payment p SET status = o.status FROM orders o
 WHERE o.order_id = p.order_id AND o.status <> 'COMPLETED';
 
+UPDATE orders SET order_status = 'COMPLETED' WHERE created_at < NOW() - INTERVAL '90 minutes' OR status <> 'COMPLETED';
+
 SELECT setval('employee_employee_id_seq', (SELECT MAX(employee_id) FROM employee));
 SELECT setval('customer_customer_id_seq', (SELECT MAX(customer_id) FROM customer));
 SELECT setval('category_category_id_seq', (SELECT MAX(category_id) FROM category));

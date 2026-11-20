@@ -2,6 +2,7 @@ package com.kfc.pos.http;
 
 import com.kfc.pos.model.Employee;
 import com.kfc.pos.model.Order;
+import com.kfc.pos.model.OrderStatus;
 import com.kfc.pos.service.AuthService;
 import com.kfc.pos.service.CheckoutService;
 import com.kfc.pos.service.CheckoutService.CartLine;
@@ -83,6 +84,11 @@ public class OrderHandler extends BaseHandler {
         }
 
         String action = req.segment(1);
+        if (req.segmentCount() == 2 && req.method().equals("POST") && action.equals("status")) {
+            existing.changeOrderStatus(OrderStatus.parse(req.body().getString("status")), user);
+            orderTable.saveOrderStatus(existing);
+            return JsonMapper.order(existing, null, user);
+        }
         if (req.segmentCount() == 2 && req.method().equals("POST") && action.matches("void|refund")) {
             checkoutService.cancel(user, id, action, req.body().getString("reason"));
             return JsonMapper.order(orderTable.findById(id).orElseThrow(), null, user);

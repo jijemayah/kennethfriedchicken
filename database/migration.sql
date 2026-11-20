@@ -71,4 +71,10 @@ UPDATE product SET name = 'Coke'                  WHERE name = 'Coke (Regular)';
 UPDATE employee SET password_hash = '120000:ieu8f+516piiRzscjYEMmw==:r2rvWbTokrK84QKU0ohdERF22AVukHVv2NJWt8gUk/g=' WHERE username = 'kdrueco';
 UPDATE employee SET password_hash = '120000:Uuuc2BuxsXWXH+d1u+ZXxw==:jK3DKkzVL8ASc5otIM/Dvn7glbYwpwlJoBmhztRtSRQ=' WHERE username = 'jesguerra';
 
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS order_status VARCHAR(16) NOT NULL DEFAULT 'COMPLETED';
+ALTER TABLE orders ALTER COLUMN order_status SET DEFAULT 'PREPARING';
+ALTER TABLE orders DROP CONSTRAINT IF EXISTS orders_order_status_check;
+ALTER TABLE orders ADD CONSTRAINT orders_order_status_check
+    CHECK (order_status IN ('PREPARING', 'READY', 'OUT_FOR_DELIVERY', 'COMPLETED'));
+
 COMMIT;

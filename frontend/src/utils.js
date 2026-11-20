@@ -51,6 +51,22 @@ export const STATUS_STYLES = {
   REFUNDED: 'bg-amber-50 text-amber-700',
 };
 
+export const ORDER_STATUSES = [
+  { key: 'PREPARING', label: 'Preparing', badge: 'bg-amber-50 text-amber-700', dot: 'bg-amber-500' },
+  { key: 'READY', label: 'Ready', badge: 'bg-emerald-50 text-emerald-700', dot: 'bg-emerald-500' },
+  { key: 'OUT_FOR_DELIVERY', label: 'Out for delivery', badge: 'bg-blue-50 text-blue-700', dot: 'bg-blue-500' },
+  { key: 'COMPLETED', label: 'Completed', badge: 'bg-gray-100 text-gray-600', dot: 'bg-gray-400' },
+];
+export const ORDER_STATUS_LABELS = Object.fromEntries(ORDER_STATUSES.map((s) => [s.key, s.label]));
+
+export const minutesAgo = (value) => {
+  const mins = Math.max(0, Math.round((Date.now() - new Date(value).getTime()) / 60000));
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins} min ago`;
+  const hours = Math.floor(mins / 60);
+  return `${hours} hr ${mins % 60} min ago`;
+};
+
 /**
  * Same rules as the Java Discount classes, in centavos so the screen matches the receipt:
  * VAT is 12% per item after that item's discount. Senior/PWD: VAT-exempt, 20% off up to ₱250 total.
