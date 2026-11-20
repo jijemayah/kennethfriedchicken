@@ -101,12 +101,6 @@ export default function Login({ onLogin }) {
             {busy && <Spinner />} {busy ? 'Signing in…' : 'Sign in'}
           </button>
 
-          <div className="mt-8 rounded-xl border border-dashed border-line p-4 text-xs text-muted">
-            <p className="mb-1 font-semibold text-ink">Demo accounts (sample data only)</p>
-            <p>Manager: <code>kdrueco</code> · Cashier: <code>jesguerra</code></p>
-            <p>Manager password: <code>DYzGjCPrkTdw6dmR</code></p>
-            <p>Cashier password: <code>Jg3LGvthhKX6p9We</code></p>
-          </div>
         </form>
       </div>
     </div>

@@ -516,7 +516,6 @@ function PaymentModal({ open, lines, customerName, onClose, onPay }) {
               <span className="label">GCash mobile number</span>
               <input className="input" inputMode="numeric" placeholder="09XXXXXXXXX" maxLength={13}
                 value={mobile} onChange={(e) => setMobile(e.target.value)} required />
-              <span className="mt-1.5 block text-xs text-muted">Simulated: no real GCash transaction is made.</span>
             </label>
           )}
           {method === 'CARD' && (
@@ -530,7 +529,7 @@ function PaymentModal({ open, lines, customerName, onClose, onPay }) {
                 <span className="label">Card holder</span>
                 <input className="input" value={holder} onChange={(e) => setHolder(e.target.value)} placeholder="Name on card" required />
               </label>
-              <p className="text-xs text-muted">Simulated: use test number 4242 4242 4242 4242. Only the last 4 digits are saved.</p>
+              <p className="text-xs text-muted">Only the last 4 digits of the card are saved.</p>
             </>
           )}
         </div>

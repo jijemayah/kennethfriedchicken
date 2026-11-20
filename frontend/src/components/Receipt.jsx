@@ -27,7 +27,7 @@ export function Receipt({ order, printedAt }) {
       <div className="text-center">
         <img src="/logo.png" alt="" className="mx-auto mb-2 h-12 w-12 rounded-full border-2 border-primary object-cover" />
         <p className="font-sans text-sm font-bold">KENNETH FRIED CHICKEN</p>
-        <p className="text-muted">Official Receipt (Demo)</p>
+        <p className="text-muted">Ampogi ko st., Kenneth City, Manila</p>
       </div>
 
       <div className="my-3 border-t border-dashed border-gray-300" />
@@ -100,7 +100,6 @@ export function Receipt({ order, printedAt }) {
       <div className="my-3 border-t border-dashed border-gray-300" />
       {printedAt && <p className="text-center text-muted">Printed {fullTime(printedAt)}</p>}
       <p className="text-center text-muted">Thank you for dining at KFC!</p>
-      <p className="text-center text-[10px] text-muted">This is a student project receipt, not a valid BIR receipt.</p>
     </div>
   );
 }
