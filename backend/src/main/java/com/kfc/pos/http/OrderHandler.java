@@ -73,9 +73,13 @@ public class OrderHandler extends BaseHandler {
             return JsonMapper.order(orderTable.findById(orderId).orElseThrow(), null, user);
         }
 
+        if (req.segmentCount() == 1 && req.method().equals("GET") && "board".equals(req.segment(0))) {
+            return JsonMapper.list(orderTable.findUnfinished(), s -> JsonMapper.order(s.order(), s.itemCount(), user));
+        }
+
         int id = req.idAt(0);
         Order existing = orderTable.findById(id).orElseThrow(() -> notFound("Order"));
-        if (!user.canViewOrder(existing)) {
+        if (!user.canViewOrder(existing) && !user.canUpdateOrderStatus(existing)) {
             throw new ApiException(403, "Cashiers can only open today's orders");
         }
 

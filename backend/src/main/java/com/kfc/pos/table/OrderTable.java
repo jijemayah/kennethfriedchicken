@@ -79,6 +79,20 @@ public class OrderTable {
         }
     }
 
+    public List<OrderSummary> findUnfinished() throws SQLException {
+        String sql = SELECT + "WHERE o.status = 'COMPLETED' AND o.order_status <> 'COMPLETED' "
+                + "ORDER BY o.created_at LIMIT 300";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            List<OrderSummary> list = new ArrayList<>();
+            while (rs.next()) {
+                list.add(new OrderSummary(mapOrder(rs), rs.getInt("item_count")));
+            }
+            return list;
+        }
+    }
+
     public Optional<Order> findById(int id) throws SQLException {
         try (Connection conn = Database.getConnection()) {
             return findById(conn, id, false);

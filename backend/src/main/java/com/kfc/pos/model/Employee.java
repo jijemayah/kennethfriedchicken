@@ -44,7 +44,7 @@ public abstract class Employee {
     }
 
     public boolean canUpdateOrderStatus(Order order) {
-        return active && canViewOrder(order);
+        return active && (canViewOrder(order) || order.isUnfinished());
     }
 
     public String getEmployeeNo() { return employeeNo; }

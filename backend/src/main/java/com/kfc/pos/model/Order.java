@@ -135,7 +135,7 @@ public class Order {
             throw new IllegalStateException("A " + status.toLowerCase() + " order cannot change status");
         }
         if (!by.canUpdateOrderStatus(this)) {
-            throw new IllegalStateException("Cashiers can only update today's orders");
+            throw new IllegalStateException("Cashiers can only change finished orders from today");
         }
         if (!newStatus.isAllowedFor(orderType)) {
             throw new IllegalArgumentException(newStatus.getLabel() + " is only for delivery orders");
@@ -148,6 +148,10 @@ public class Order {
     }
 
     public OrderStatus getOrderStatus() { return orderStatus; }
+
+    public boolean isUnfinished() {
+        return isCompleted() && orderStatus != OrderStatus.COMPLETED;
+    }
 
     public OrderStatus getNextOrderStatus() {
         return isCompleted() ? orderStatus.next(orderType) : null;

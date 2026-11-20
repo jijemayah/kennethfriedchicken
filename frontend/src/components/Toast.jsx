@@ -12,16 +12,16 @@ export function ToastProvider({ children }) {
   }, []);
 
   const push = useCallback(
-    (type, message) => {
+    (type, message, action) => {
       const id = Date.now() + Math.random();
-      setToasts((list) => [...list.slice(-3), { id, type, message }]);
-      setTimeout(() => dismiss(id), 3000);
+      setToasts((list) => [...list.slice(-3), { id, type, message, action }]);
+      setTimeout(() => dismiss(id), action ? 6000 : 3000);
     },
     [dismiss],
   );
 
   const toast = {
-    success: (m) => push('success', m),
+    success: (m, action) => push('success', m, action),
     error: (m) => push('error', m),
   };
 
@@ -42,6 +42,14 @@ export function ToastProvider({ children }) {
               <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-emerald-600" />
             )}
             <p className="flex-1 text-sm">{t.message}</p>
+            {t.action && (
+              <button
+                className="shrink-0 text-sm font-semibold text-primary transition hover:text-primary-dark cursor-pointer"
+                onClick={() => { t.action.onClick(); dismiss(t.id); }}
+              >
+                {t.action.label}
+              </button>
+            )}
             <button className="text-muted transition hover:text-ink" onClick={() => dismiss(t.id)} aria-label="Dismiss">
               <X size={16} />
             </button>
