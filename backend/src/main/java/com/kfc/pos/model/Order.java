@@ -40,7 +40,6 @@ public class Order {
     private BigDecimal vat = BigDecimal.ZERO.setScale(2);
     private BigDecimal total = BigDecimal.ZERO.setScale(2);
 
-    /** A new order being rung up at the POS. */
     public Order(int employeeId, Integer customerId, OrderType orderType, Discount discount) {
         this.employeeId = employeeId;
         this.customerId = customerId;
@@ -50,7 +49,6 @@ public class Order {
         this.discountIdNo = this.discount.getIdNumber();
     }
 
-    /** An order loaded from the database. The totals are the amounts that were charged. */
     public Order(int id, int employeeId, String employeeName, Integer customerId, String customerName,
                  OrderType orderType, String discountType, String discountIdNo,
                  BigDecimal subtotal, BigDecimal discountAmount, BigDecimal vat, BigDecimal total,
@@ -228,7 +226,6 @@ public class Order {
 
     public String getCancelReason() { return cancelReason; }
 
-    /** Used when loading a voided or refunded order from the database. */
     public void loadCancellation(OffsetDateTime at, String byName, String reason) {
         this.cancelledAt = at;
         this.cancelledByName = byName;
@@ -243,7 +240,6 @@ public class Order {
 
     public BigDecimal getTotal() { return total; }
 
-    /** Sales that VAT was charged on (after discount). Zero for senior/PWD orders. */
     public BigDecimal getVatableSales() {
         return isVatExempt() ? BigDecimal.ZERO.setScale(2) : subtotal.subtract(discountAmount);
     }

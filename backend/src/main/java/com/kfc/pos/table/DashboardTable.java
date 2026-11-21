@@ -5,10 +5,6 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Dashboard numbers. Sales are net: orders rung up in the period minus orders voided/refunded in the period
- * (a refund counts on the day it was given).
- */
 public class DashboardTable {
     static final String TODAY = "(now() AT TIME ZONE 'Asia/Manila')::date";
     static final String ORDER_DAY = "(o.created_at AT TIME ZONE 'Asia/Manila')::date";
@@ -20,7 +16,6 @@ public class DashboardTable {
                 + "), 0)";
     }
 
-    /** Managers: everything, including the last 7 days, all-time numbers and low stock. */
     public Map<String, Object> managerSummary() throws SQLException {
         Map<String, Object> result = new LinkedHashMap<>();
         try (Connection conn = Database.getConnection()) {
@@ -57,7 +52,6 @@ public class DashboardTable {
         return result;
     }
 
-    /** Cashiers: today only (resets at midnight, UTC+8), plus their own transaction count. */
     public Map<String, Object> cashierSummary(int employeeId) throws SQLException {
         Map<String, Object> result = new LinkedHashMap<>();
         String today = " AND " + ORDER_DAY + " = " + TODAY;

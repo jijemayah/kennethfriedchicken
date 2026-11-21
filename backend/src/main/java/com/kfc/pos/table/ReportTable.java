@@ -8,10 +8,6 @@ import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * End-of-day / sales report for a date range (store time, UTC+8).
- * Gross = orders rung up in the range. Voids and refunds are taken off on the day they happened.
- */
 public class ReportTable {
     private static final String RANGE_CTE =
             "WITH rung AS (SELECT o.*, p.method FROM orders o JOIN payment p ON p.order_id = o.order_id "

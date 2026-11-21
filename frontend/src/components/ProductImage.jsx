@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { categoryIcon } from '../utils';
 
-// Pictures live in frontend/public/products/. Vite serves everything in public/ from the site root,
-// so public/products/coke.jpg is loaded with src="/products/coke.jpg".
-// Products are matched by name (case-insensitive). A product with its own imageUrl in the database wins.
 const IMAGES = [
   [/1-pc kenneth original/i, '1pc-kenneth-original.jpg'],
   [/2-pc kenneth original/i, '2pc-kenneth-original.jpg'],
@@ -35,7 +32,6 @@ export function productImage(product) {
   return match ? `/products/${match[1]}` : null;
 }
 
-/** Shows the product photo, or the category icon if there is no photo or it fails to load. */
 export default function ProductImage({ product, className = '', iconSize = 18 }) {
   const [broken, setBroken] = useState(false);
   const src = productImage(product);

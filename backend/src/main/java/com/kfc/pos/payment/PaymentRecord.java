@@ -39,6 +39,5 @@ public class PaymentRecord {
 
     public OffsetDateTime getPaidAt() { return paidAt; }
 
-    /** PAID, VOIDED or REFUNDED. */
     public String getStatus() { return status; }
 }

@@ -7,10 +7,6 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Abstraction + polymorphism: Order calls {@link #apply(List)} and {@link #isVatExempt()} without knowing
- * which discount it has. Each subclass decides how much comes off each item.
- */
 public abstract class Discount {
     private static final Pattern ID_NUMBER = Pattern.compile("^[A-Za-z0-9-]{4,30}$");
 
@@ -24,7 +20,6 @@ public abstract class Discount {
 
     public abstract String getLabel();
 
-    /** Returns the discount for each item, in the same order as {@code items}. */
     protected abstract List<BigDecimal> calculate(List<OrderItem> items);
 
     public boolean isVatExempt() {

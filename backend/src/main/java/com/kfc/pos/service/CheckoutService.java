@@ -108,10 +108,6 @@ public class CheckoutService {
         }
     }
 
-    /**
-     * Void: money goes back and the items go back to inventory.
-     * Refund: money goes back but the stock stays deducted (food was already served).
-     */
     public Order cancel(Employee user, int orderId, String action, String reason) throws SQLException {
         try (Connection conn = Database.getConnection()) {
             conn.setAutoCommit(false);

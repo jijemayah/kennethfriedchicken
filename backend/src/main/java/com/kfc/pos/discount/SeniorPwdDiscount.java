@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Senior citizen / PWD: no VAT, 20% off the whole order, at most ₱250 in total. */
 public class SeniorPwdDiscount extends Discount {
     public static final BigDecimal CAP = new BigDecimal("250.00");
 

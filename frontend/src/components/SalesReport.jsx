@@ -23,7 +23,6 @@ function rangeFor(preset, anchor) {
   return null;
 }
 
-/** Card on the dashboard that opens the EoD / sales report. */
 export function ReportCard({ user }) {
   const manager = user.canViewSalesHistory;
   const [preset, setPreset] = useState('DAILY');

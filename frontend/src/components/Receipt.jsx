@@ -116,7 +116,6 @@ function Row({ label, value }) {
 export function ReceiptModal({ order, open, onClose, title = 'Receipt', extraFooter }) {
   const [printedAt, setPrintedAt] = useState(() => new Date());
 
-  // "Printed" time: when this receipt was opened, updated again right before printing.
   useEffect(() => {
     if (open) setPrintedAt(new Date());
   }, [open, order?.id]);

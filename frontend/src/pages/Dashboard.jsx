@@ -166,7 +166,6 @@ function WeekBars({ days }) {
   );
 }
 
-/** Line chart: x = hour of the day, y = sales (₱) in that hour. */
 function HourLine({ hours }) {
   if (!hours.length) return <EmptyState title="No sales yet today" />;
   const W = 640, H = 230, L = 56, R = 14, T = 14, B = 30;

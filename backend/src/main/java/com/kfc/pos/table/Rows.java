@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/** Runs a read-only query and returns each row as a map with camelCase keys (used for reports). */
 final class Rows {
     private static final Pattern SNAKE = Pattern.compile("_([a-z])");
 

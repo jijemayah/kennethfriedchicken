@@ -75,10 +75,6 @@ public class CustomerTable implements CrudTable<Customer> {
         }
     }
 
-    /**
-     * Finds a customer by name (ignoring case and extra spaces) or adds a new one.
-     * Called during checkout, so it uses the checkout transaction.
-     */
     public Customer findOrCreateByName(Connection conn, String name) throws SQLException {
         Customer typed = new Customer(0, name == null ? null : name.trim().replaceAll("\\s+", " "), null, null);
         String find = SELECT + "WHERE LOWER(full_name) = LOWER(?) ORDER BY customer_id LIMIT 1";

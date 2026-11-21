@@ -1,18 +1,14 @@
-# Ignores every .env file, except the templates
 .env
 .env.*
 *.env
 !.env.example
 
-# Ignores unnecessary Java files
 backend/target/
 *.class
 
-# Ignores unnecessary Node files
 node_modules/
 frontend/dist/
 
-# Ignores unnecessary IDE / OS files
 .idea/
 .vscode/
 *.iml

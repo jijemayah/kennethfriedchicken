@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/** Employee: 10% off one unit of the most expensive item. VAT is still charged on what is left. */
 public class EmployeeDiscount extends Discount {
     public static final Pattern EMPLOYEE_NO = Pattern.compile("^EMP-\\d{3,}$");
 

@@ -79,14 +79,12 @@ export function Spinner({ size = 16 }) {
   return <Loader2 size={size} className="animate-spin-slow" />;
 }
 
-/** Thin red bar at the very top of the screen while any request is running. */
 export function TopLoadingBar() {
   const [active, setActive] = useState(false);
   useEffect(() => {
     let timer;
     const unsubscribe = subscribeLoading((n) => {
       clearTimeout(timer);
-      // Small delay so very fast requests don't flicker the bar.
       timer = n > 0 ? setTimeout(() => setActive(true), 120) : setTimeout(() => setActive(false), 150);
     });
     return () => { clearTimeout(timer); unsubscribe(); };
@@ -98,7 +96,6 @@ export function TopLoadingBar() {
   );
 }
 
-/** Bouncing logo inside a spinning ring, with three pulsing dots. Used for full-page loading. */
 export function BrandLoader({ message = 'Loading…', size = 72 }) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-10 animate-fade-in" role="status" aria-live="polite">

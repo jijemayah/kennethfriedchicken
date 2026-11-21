@@ -41,7 +41,6 @@ public class OrderHandler extends BaseHandler {
             LocalDate from = date(req.query("from"));
             LocalDate to = date(req.query("to"));
             if (!user.canViewSalesHistory()) {
-                // Cashiers only ever see today's orders (store time, UTC+8).
                 from = Order.storeToday();
                 to = Order.storeToday();
             }

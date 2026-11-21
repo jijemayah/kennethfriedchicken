@@ -82,7 +82,6 @@ public final class JsonMapper {
         return m;
     }
 
-    /** {@code viewer} decides the canVoid flag the frontend uses to show the Void / Refund buttons. */
     public static Map<String, Object> order(Order o, Integer itemCount, Employee viewer) {
         Map<String, Object> m = new LinkedHashMap<>();
         m.put("id", o.getId());

@@ -6,7 +6,6 @@ let onUnauthorized = () => {};
 let pending = 0;
 const loadingListeners = new Set();
 
-// Number of requests in flight, for the loading bar at the top of the screen.
 export function subscribeLoading(fn) {
   loadingListeners.add(fn);
   fn(pending);

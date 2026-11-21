@@ -19,7 +19,6 @@ public class OrderItem {
         applyDiscount(BigDecimal.ZERO, false);
     }
 
-    /** Used when loading a saved order: discount and VAT are the values that were charged. */
     public OrderItem(int productId, String productName, BigDecimal unitPrice, int quantity,
                      BigDecimal discount, BigDecimal vat) {
         this(productId, productName, unitPrice, quantity);
@@ -31,7 +30,6 @@ public class OrderItem {
         return unitPrice.multiply(BigDecimal.valueOf(quantity)).setScale(2, RoundingMode.HALF_UP);
     }
 
-    /** VAT is computed per item, on the price after this item's discount. */
     public void applyDiscount(BigDecimal amount, boolean vatExempt) {
         BigDecimal value = Validator.requireMoney(amount, "Discount");
         if (value.compareTo(getLineTotal()) > 0) {

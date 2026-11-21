@@ -99,7 +99,6 @@ public class OrderTable {
         }
     }
 
-    /** With {@code forUpdate}, the order row stays locked until the transaction ends. */
     public Optional<Order> findById(Connection conn, int id, boolean forUpdate) throws SQLException {
         Order order;
         String sql = SELECT + "WHERE o.order_id = ?" + (forUpdate ? " FOR UPDATE OF o" : "");
@@ -183,7 +182,6 @@ public class OrderTable {
         return orderId;
     }
 
-    /** Saves a void or refund. The payment row gets the same status as the order. */
     public void saveCancellation(Connection conn, Order order, int cancelledBy) throws SQLException {
         String sql = "UPDATE orders SET status = ?, cancelled_at = NOW(), cancelled_by = ?, cancel_reason = ? "
                 + "WHERE order_id = ? AND status = 'COMPLETED'";

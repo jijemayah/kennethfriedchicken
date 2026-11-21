@@ -9,7 +9,6 @@ INSERT INTO customer (customer_id, full_name, phone, email) VALUES
 (4, 'Jose Andre Evangelista', '09201234504', 'jose.evangelista@example.com'),
 (5, 'Jake Andrei De Vera',    '09211234505', NULL);
 
--- drive_thru = FALSE hides the category in the POS drive-thru mode and the backend rejects it.
 INSERT INTO category (category_id, name, description, drive_thru) VALUES
 (1, 'Fried Chicken',       'Signature crispy fried chicken meals',     TRUE),
 (2, 'Buckets',             'Sharing buckets for groups and families',  TRUE),
@@ -83,7 +82,6 @@ INSERT INTO orders (order_id, employee_id, customer_id, order_type, discount_typ
 (26, 2, 1,    'DELIVERY',   'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '1 hour'),
 (27, 2, NULL, 'DRIVE_THRU', 'NONE',     NULL,               0, 0, 0, NOW() - INTERVAL '25 minutes');
 
--- Every item gets its own 12% VAT (prices are VAT-exclusive).
 INSERT INTO order_item (order_id, product_id, product_name, quantity, unit_price, line_total, discount, vat)
 SELECT v.order_id, p.product_id, p.name, v.qty, p.price, p.price * v.qty, 0, ROUND(p.price * v.qty * 0.12, 2)
 FROM (VALUES
@@ -117,7 +115,6 @@ FROM (VALUES
 ) AS v(order_id, product_id, qty)
 JOIN product p ON p.product_id = v.product_id;
 
--- Senior/PWD: VAT-exempt, 20% off each item until the ₱250 cap is used up (same rule as SeniorPwdDiscount.java).
 UPDATE order_item oi SET vat = 0, discount = d.amount
 FROM (
     SELECT x.order_item_id,
@@ -129,7 +126,6 @@ FROM (
 ) d
 WHERE oi.order_item_id = d.order_item_id;
 
--- Employee: 10% off one unit of the most expensive item, VAT is computed after the discount (EmployeeDiscount.java).
 UPDATE order_item oi SET discount = ROUND(oi.unit_price * 0.10, 2),
                          vat = ROUND((oi.line_total - ROUND(oi.unit_price * 0.10, 2)) * 0.12, 2)
 FROM (SELECT DISTINCT ON (oi.order_id) oi.order_item_id
@@ -169,7 +165,6 @@ JOIN (VALUES
     (25, 'CASH'), (26, 'GCASH'), (27, 'CASH')
 ) AS m(order_id, method) ON m.order_id = o.order_id;
 
--- Sample void (stock returned) and refund (stock stays deducted).
 UPDATE orders SET status = 'VOIDED', cancelled_at = created_at + INTERVAL '6 minutes', cancelled_by = 1,
                   cancel_reason = 'Wrong items punched in'
 WHERE order_id = 9;

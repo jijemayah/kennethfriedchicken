@@ -18,7 +18,6 @@ export const dateTime = (value) =>
 export const timeOnly = (value) =>
   value ? new Date(value).toLocaleTimeString('en-PH', { hour: 'numeric', minute: '2-digit', second: '2-digit' }) : '';
 
-// Store dates are always Philippine time (UTC+8), whatever the device clock says.
 export const storeDate = (value = new Date()) =>
   new Date(value).toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' });
 export const today = () => storeDate();
@@ -67,11 +66,6 @@ export const minutesAgo = (value) => {
   return `${hours} hr ${mins % 60} min ago`;
 };
 
-/**
- * Same rules as the Java Discount classes, in centavos so the screen matches the receipt:
- * VAT is 12% per item after that item's discount. Senior/PWD: VAT-exempt, 20% off up to ₱250 total.
- * Employee: 10% off one unit of the most expensive item.
- */
 export function cartTotals(lines, discountType = 'NONE') {
   const exempt = discountType === 'SENIOR' || discountType === 'PWD';
   let capLeft = 25000;

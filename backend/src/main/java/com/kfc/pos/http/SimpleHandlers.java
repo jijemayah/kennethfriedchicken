@@ -32,7 +32,6 @@ public final class SimpleHandlers {
         }
     }
 
-    /** GET /api/reports/sales?from=YYYY-MM-DD&to=YYYY-MM-DD. Cashiers can only get today's (daily) report. */
     public static class Reports extends BaseHandler {
         private final ReportTable table;
 

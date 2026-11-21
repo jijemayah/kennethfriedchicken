@@ -29,7 +29,6 @@ public class Category {
         this.description = Validator.optionalText(description, 255);
     }
 
-    /** False for categories that are not sold at the drive-thru (rice bowls, sides, desserts). */
     public boolean isDriveThru() { return driveThru; }
 
     public void setDriveThru(boolean driveThru) { this.driveThru = driveThru; }
