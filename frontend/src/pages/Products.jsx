@@ -3,6 +3,7 @@ import { Plus, Pencil, Trash2, Search, Tags, UtensilsCrossed } from 'lucide-reac
 import { api } from '../api';
 import { useToast } from '../components/Toast';
 import { Modal, ConfirmModal, PageHeader, TableSkeleton, EmptyState, ErrorBox, Field, Spinner } from '../components/ui';
+import ProductImage from '../components/ProductImage';
 import { categoryIcon, money, useApi } from '../utils';
 
 export default function Products() {
@@ -114,12 +115,11 @@ function ProductList({ categories }) {
             </thead>
             <tbody>
               {rows.map((p, i) => {
-                const Icon = categoryIcon(p.categoryName);
                 return (
                   <tr key={p.id} className="border-t border-line transition-colors hover:bg-page/60 animate-fade-in" style={{ animationDelay: `${Math.min(i, 15) * 15}ms` }}>
                     <td className="td">
                       <div className="flex items-center gap-3">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary"><Icon size={17} /></span>
+                        <ProductImage product={p} iconSize={17} className="h-9 w-9 shrink-0 rounded-lg" />
                         <div>
                           <p className="font-semibold">{p.name}</p>
                           <p className="max-w-xs truncate text-xs text-muted">{p.description}</p>

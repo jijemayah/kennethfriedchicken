@@ -7,6 +7,7 @@ import { api } from '../api';
 import { useToast } from '../components/Toast';
 import { Modal, Skeleton, Spinner, EmptyState, ErrorBox } from '../components/ui';
 import { ReceiptModal } from '../components/Receipt';
+import ProductImage from '../components/ProductImage';
 import { cartTotals, categoryIcon, money, useApi, ORDER_TYPES, NEEDS_NAME, DISCOUNTS } from '../utils';
 
 export default function POS() {
@@ -287,7 +288,6 @@ function ModeToggle({ mode, onChange }) {
 }
 
 function ProductCard({ product, index, flash, onAdd }) {
-  const Icon = categoryIcon(product.categoryName);
   const out = product.stock <= 0;
   const low = !out && product.stock <= 10;
   return (
@@ -301,8 +301,8 @@ function ProductCard({ product, index, flash, onAdd }) {
         disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:translate-y-0 disabled:hover:shadow-none
         ${flash ? 'border-primary ring-4 ring-primary/15' : 'border-line hover:border-primary/30'}`}
     >
-      <div className="relative mb-3 flex h-20 items-center justify-center rounded-xl bg-linear-to-br from-primary/10 to-primary/[0.03]">
-        <Icon size={34} className="text-primary transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6" />
+      <div className="relative mb-3 flex h-28 items-center justify-center overflow-hidden rounded-xl bg-white">
+        <ProductImage product={product} iconSize={34} className="h-full w-full transition-transform duration-300 group-hover:scale-105" />
         {flash && <span className="absolute h-12 w-12 rounded-full bg-primary/30 animate-ripple" />}
         <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white text-primary opacity-0 shadow transition-all duration-200 group-hover:opacity-100">
           <Plus size={16} />
@@ -322,12 +322,9 @@ function ProductCard({ product, index, flash, onAdd }) {
 }
 
 function CartLine({ line, onChange, onRemove }) {
-  const Icon = categoryIcon(line.categoryName);
   return (
     <li className={`flex items-center gap-3 border-b border-line px-5 py-3 last:border-0 ${line.removing ? 'animate-item-out' : 'animate-item-in'}`}>
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-        <Icon size={18} />
-      </div>
+      <ProductImage product={line} className="h-10 w-10 shrink-0 rounded-lg" />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold">{line.name}</p>
         <p className="text-xs text-muted">{money(line.price)} each</p>
