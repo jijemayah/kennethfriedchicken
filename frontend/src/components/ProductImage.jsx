@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { categoryIcon } from '../utils';
 
 const IMAGES = [
-  [/1-pc kenneth original/i, '1pc-kenneth-original.jpg'],
-  [/2-pc kenneth original/i, '2pc-kenneth-original.jpg'],
-  [/1-pc hot kenneth/i, '1pc-hot-kenneth.jpg'],
-  [/2-pc hot kenneth/i, '2pc-hot-kenneth.jpg'],
-  [/tenders/i, '3pc-kenneth-tenders.jpg'],
+  [/1-pc kenneth original/i, '1pc-kenneth-original.webp'],
+  [/2-pc kenneth original/i, '2pc-kenneth-original.webp'],
+  [/1-pc hot kenneth/i, '1pc-hot-kenneth.webp'],
+  [/2-pc hot kenneth/i, '2pc-hot-kenneth.webp'],
+  [/tenders/i, '3pc-kenneth-tenders.webp'],
   [/bucket/i, 'bucket.jpg'],
   [/zinger/i, 'zinger-burger.jpg'],
   [/sandwich/i, 'sandwich-kenneth.jpg'],
